@@ -56,7 +56,7 @@ permalink: /about/
           <h4>Keyword Extraction Algorithm with Financial Analytic Perspective, at Nomad Connection at 2016</h4>
           <p>Extract meaningful keywords from news, analytic reports and disclosures using Word2Vec, TF-IDF, Support Vector Regression(SVR), General NLP Technique. Word2Vec & SVR is used to express perspective of analyst.</p>
           <img src="{{site.url}}/assets/imgs/keyword_1.png" width="80%"/>
-          <img src="{{site.url}}/assets/imgs/keyword_2.png" width="80%"/>
+          <img src="{{site.url}}/assets/imgs/keyword_2.jpg" width="80%"/>
           </div>
 
           <hr/>
@@ -66,14 +66,14 @@ permalink: /about/
           <p>Smart Oil Filter Sensor, Server and App. Made with Arduino Open Source Hardware, Hybrid App using phonegap, Flask-RESTful for server</p>
 
           <img src="{{site.url}}/assets/imgs/qualc_1.jpg" width="50%"/>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/ICFoAVsR_bM" frameborder="0" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/P_QIbNfXCi0" frameborder="0" allowfullscreen></iframe>
           </div>
 
           <hr/>
           <div class='sect'> 
           <h4>Tracking of 3D Path of Traffic Sign, at KNU in 2014~2015</h4>
           <p>Detecting Traffic Sign and Finding 3D path of Traffic Sign using Stereo Camera. Support Vector Machine, Multi-Layer Neural Network, Stero Vision and Several Computer Vision Techniques ared used </p>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/GOdCAsdkJg0" frameborder="0" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
           </div>
 
           <hr/>
