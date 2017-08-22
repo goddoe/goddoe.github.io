@@ -19,11 +19,11 @@ permalink: /about/
           <br/>
 
           <h3>Career</h3>
-          <p>2016-Current Machine Learning Researcher in Nomad Connection.</p>
+          <p>2016.2-Current Machine Learning Researcher in Nomad Connection.</p>
           <hr/>
           <h3>Education</h3>
-          <p>2014-2016 M.S. in Computer Science & Engineering in Kyungpook National University </p>
-          <p>2009-2014 B.S. in Biotechnology from Kyungpook National University</p>
+          <p>2014.3-2016.2 M.S. at Computer Science & Engineering in Kyungpook National University </p>
+          <p>2009.3-2014.2 B.S. at Biotechnology from Kyungpook National University</p>
           <hr/>
           <h3>Interests</h3>
           <p>Machine Learning, Computer Vision, Natural Language Processing, Question Answering System, Chatbot System, Entity Name Extraction, Startup</p>
@@ -36,6 +36,12 @@ permalink: /about/
           <hr/>
 
           <h3>Projects</h3>
+
+          <div class='sect'>
+          <h4>ID Card OCR Recognition for Non-face-to-face Authentication, at Nomad Connection in 2017</h4>
+          <p>Korean, English, Special Character Recognition with Convolutional Neural Network using character hierarchy. Identification card detection using restricted hough space. Character line detection with several computer vision methods.</p>
+          </div>
+
 
           <div class='sect'>
           <h4>Chatbot Solution, at Nomad Connection in 2016</h4>
