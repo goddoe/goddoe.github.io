@@ -42,6 +42,7 @@ permalink: /about/
           <p>Korean, English, Special Character Recognition with Convolutional Neural Network using character hierarchy. Identification card detection using restricted hough space. Character line detection with several computer vision methods.</p>
           </div>
 
+          <hr/>
 
           <div class='sect'>
           <h4>Chatbot Solution, at Nomad Connection in 2016</h4>
