@@ -64,3 +64,81 @@ class MultiImageReader(object):
                 yield buff
                 buff = []
 {% endhighlight %}
+
+# Playground
+
+```python
+train_img_path = "./data/train"
+image_list = MultiImageReader(train_img_path,)
+```
+
+```python
+img = image_list.__iter__().__next__()
+```
+
+```python
+plt.imshow(img[0])
+```
+    <matplotlib.image.AxesImage at 0x113cad9e8>
+![png](output_8_1.png)
+
+
+- - -
+
+# Research Data
+
+## Calculate Mean Image
+
+
+```python
+sum_i = 0
+img_mean = 0
+image_list = MultiImageReader(train_img_path,)
+for i, img_batch in enumerate(image_list):
+    sum_i += 1
+    img_batch_mean = np.mean(img_batch, axis=0)
+    img_mean = img_mean*((sum_i-1)/sum_i) + img_batch_mean *(1/sum_i)
+```
+
+
+```python
+plt.imshow(img_mean.astype(np.int16))
+```
+
+
+```python
+np.save("data/img_mean.npy", img_mean)
+```
+
+
+```python
+del image_list
+```
+
+## Calculate Std Image
+
+
+```python
+sum_i = 0
+img_var = 0
+image_list = MultiImageReader(train_img_path,)
+for i, img_batch in enumerate(image_list):
+    sum_i += 1
+    img_batch_np = np.array(image_batch, dtype=np.float64)
+    
+    img_batch_square_sum = np.mean((img_batch_np - img_mean)*(img_batch_np - img_mean), axis=0)
+    
+    img_var = img_var *((sum_i-1)/sum_i) + img_batch_square_sum * (1/sum_i)
+    
+img_std = np.sqrt(img_var)
+```
+
+
+```python
+plt.imshow(img_std.astype(np.int16))
+```
+
+
+```python
+del image_list
+```
