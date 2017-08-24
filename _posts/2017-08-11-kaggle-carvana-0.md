@@ -46,7 +46,8 @@ table, th, td {
 
 - - - 
 
-# Kaggle - Carvana Image Masking Challenge 0 
+# Kaggle - Carvana Image Masking Challenge  
+## Research data
 
 ```python
 train_img_path = "./data/train"
@@ -98,15 +99,8 @@ for i, img_batch in enumerate(image_list):
 
 ```python
 plt.imshow(img_mean.astype(np.int16))
-```
-
-
-```python
 np.save("data/img_mean.npy", img_mean)
-```
 
-
-```python
 del image_list
 ```
 
@@ -131,9 +125,9 @@ img_std = np.sqrt(img_var)
 
 ```python
 plt.imshow(img_std.astype(np.int16))
-```
+np.save("data/img_std.npy", img_std)
 
-
-```python
 del image_list
 ```
+
+작성중 ...
