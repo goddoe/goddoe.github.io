@@ -44,9 +44,27 @@ table, th, td {
 
 데이터는 그림1, 그림2, 표1과 같이 원본 이미지와 마스크 이미지, 마스크 csv로 구성되어 있다. 마스크 csv는 원본 이미지 파일 이름과 (position, num of pixel) (position, num of pixel) (position, num of pixel) ... 형식으로 되어있다. position은 이미지를 흑백으로 변환하고 1D로 변환한뒤의 position이다. 이런 표현방식은 당연히 submission을 위한 압축을 위해 사용하는 것이다.
 
-맥북에서 테스트하고 있는데 학습데이터 이미지만 5022개다. 한번에 메모리에 올리기에는 너무 양이 많다. generater을 사용하여 memory-friendly한 이미지 리더를 만들었다. 한번 iteration 할때마다 batch_size만큼의 이미지를 읽어온다. 
+- - - 
 
-{% highlight python %}
+# Kaggle - Carvana Image Masking Challenge 0 
+
+```python
+train_img_path = "./data/train"
+image_list = MultiImageReader(train_img_path,)
+```
+
+```python
+img = image_list.__iter__().__next__()
+```
+
+```python
+plt.imshow(img[0])
+```
+![png]({{ site.url }}/assets/output_8_1.png)
+
+
+맥북에서 테스트하고 있는데 학습데이터 이미지만 5022개다. 맥북에 한번에 메모리에 올리기에는 너무 양이 많다. generater을 사용하여 memory-friendly한 이미지 리더를 만들었다. 한번 iteration 할때마다 batch_size만큼의 이미지를 읽어온다. 
+```python
 class MultiImageReader(object):
     def __init__(self, base_path, batch_size=50):
         self.base_path = base_path
@@ -63,33 +81,10 @@ class MultiImageReader(object):
             if (i+1) % self.batch_size == 0:
                 yield buff
                 buff = []
-{% endhighlight %}
-
-# Playground
-
-```python
-train_img_path = "./data/train"
-image_list = MultiImageReader(train_img_path,)
 ```
 
-```python
-img = image_list.__iter__().__next__()
-```
-
-```python
-plt.imshow(img[0])
-```
-    <matplotlib.image.AxesImage at 0x113cad9e8>
-![png](output_8_1.png)
-
-
-- - -
-
-# Research Data
 
 ## Calculate Mean Image
-
-
 ```python
 sum_i = 0
 img_mean = 0
