@@ -11,11 +11,11 @@ categories: jekyll update
 Solution by Sung-ju Kim
 <hr/>
 
-<p>Description from Algospot (https://algospot.com/judge/problem/read/ENDIANS).<br/>
+Description from Algospot (https://algospot.com/judge/problem/read/ENDIANS).<br/>
 Problem from ICPC Seoul Regional Warmup 2008
-</p>
+
 <hr/>
-<p>The two island nations Lilliput and Blefuscu are severe rivals. They dislike each other a lot, and the most important reason was that they break open boiled eggs in different ways.
+The two island nations Lilliput and Blefuscu are severe rivals. They dislike each other a lot, and the most important reason was that they break open boiled eggs in different ways.
 People from Lilliput are called little-endians, since they open eggs at the small end. People from Blefuscu are called big-endians, since they open eggs at the big end.
 
 This argument was not only about their breakfasts but about their computers, too. Lilliput and Blefuscu's computers differed in the way they store integers; they stored the bytes in different orders. Computers from Lilliput(*little-endians*) ordered it from the LSB(least significant byte) to the MSB(most significant byte), and computers from Blefuscu was exactly the opposite.
@@ -28,7 +28,6 @@ Therefore, if there was any need to exchange information between Blefuscu and Li
 
 Given some 32-bit unsigned integers retrieved in a wrong endian, write a program to do a conversion to find the correct value.
 
-</p>
 <hr/>
    
 입력
