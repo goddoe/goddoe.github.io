@@ -8,6 +8,7 @@ categories: [Tensorflow, Machine Learning]
 # Polynomial regression
 Sung-ju Kim
 + <a href="https://github.com/goddoe/ml_lecture/blob/master/notebook/3_polynomial_regression.ipynb">https://github.com/goddoe/ml_lecture/blob/master/notebook/3_polynomial_regression.ipynb</a>
+
 - - -
 
 ## Content
