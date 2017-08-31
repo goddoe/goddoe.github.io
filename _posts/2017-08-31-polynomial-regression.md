@@ -15,6 +15,7 @@ Sung-ju Kim
 1. Prepare pseudo data
 2. Make model & Design cost function & optimizer
 3. Train & Draw graph
+
 - - -
 
 ## 1. Prepare pseudo data
