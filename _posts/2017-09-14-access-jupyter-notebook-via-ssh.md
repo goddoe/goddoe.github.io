@@ -27,7 +27,7 @@ https://localhost:8888
 ```
 
 # Conclusion
-If you are working with a Korean bank project. Escape that hell project!!!!! Korean bank projects suck!!!!! ㄷㄷㄷ
+If you are working with ANY Korean bank project. Escape that hell project!!!!! Korean bank projects suck!!!!! ㄷㄷㄷ
 
 
 ## reference  
