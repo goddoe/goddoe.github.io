@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Kaggle - Carvana Image Masking Challenge 0"
+title:  "Carvana Image Masking Challenge 0"
 date:   2017-08-11 00:04:11 +0900
 categories: jekyll update
 ---

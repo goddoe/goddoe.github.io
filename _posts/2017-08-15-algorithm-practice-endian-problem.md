@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Algorithm Practice - Endian Problem"
+title:  "Endian Problem"
 date:   2017-08-15 00:10:11 +0900
 categories: Algorithm
 ---

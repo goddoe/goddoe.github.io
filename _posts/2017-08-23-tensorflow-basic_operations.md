@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Machine Learning - Tensorflow Basic Operations"
+title:  "Tensorflow Basic Operations"
 date:   2017-08-23 00:10:11 +0900
 categories: [Tensorflow, Machine Learning]
 ---

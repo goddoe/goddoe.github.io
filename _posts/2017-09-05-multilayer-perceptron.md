@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Machine Learning - Multi-layer Perceptron"
+title:  "Multi-layer Perceptron"
 date:   2017-09-05 00:10:11 +0900
 categories: [Tensorflow, Machine Learning]
 ---

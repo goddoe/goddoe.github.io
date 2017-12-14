@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Machine Learning - Polynomial Regression"
+title:  "Polynomial Regression"
 date:   2017-08-31 00:10:11 +0900
 categories: [Tensorflow, Machine Learning]
 ---

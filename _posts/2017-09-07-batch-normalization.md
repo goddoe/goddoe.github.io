@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Machine Learning - Batch Normalization"
+title:  "Batch Normalization"
 date:   2017-09-07 00:10:11 +0900
 categories: [Tensorflow, Machine Learning]
 ---

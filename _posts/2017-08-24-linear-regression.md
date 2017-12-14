@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Machine Learning - Linear Regression"
+title:  "Linear Regression"
 date:   2017-08-24 00:10:11 +0900
 categories: [Tensorflow, Machine Learning]
 ---

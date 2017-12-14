@@ -26,9 +26,6 @@ user@client$ ssh -N -f -L localhost:8888:localhost:8888 user@server
 https://localhost:8888
 ```
 
-# Conclusion
-If you are working with ANY Korean bank project. Escape that hell project!!!!! Korean bank projects suck!!!!! ㄷㄷㄷ
-
 
 ## reference  
 + https://coderwall.com/p/ohk6cg/remote-access-to-ipython-notebooks-via-ssh
