@@ -22,8 +22,8 @@ permalink: /about/
           <p>2016.2-Current Machine Learning Researcher in Nomad Connection.</p>
           <hr/>
           <h3>Education</h3>
-          <p>2014.3-2016.2 M.S. at Computer Science & Engineering in Kyungpook National University </p>
-          <p>2009.3-2014.2 B.S. at Biotechnology from Kyungpook National University</p>
+          <p>2014.3-2016.2 M.S. in Computer Science & Engineering from Kyungpook National University </p>
+          <p>2009.3-2014.2 B.S. in Biotechnology from Kyungpook National University</p>
           <hr/>
           <h3>Interests</h3>
           <p>Machine Learning, Computer Vision, Natural Language Processing, Question Answering System, Chatbot System, Entity Name Extraction, Startup</p>
