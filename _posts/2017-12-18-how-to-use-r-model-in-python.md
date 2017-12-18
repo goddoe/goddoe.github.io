@@ -6,7 +6,7 @@ categories: [R, Machine Learning]
 ---
 
 # Introduction 
-R and python are most popular language for data scientist and researchers. Researchers are often use both languages and sometime needs features of each language at the same time. Fortunately, there is a library named 'rpy2' which enables python to use R. let's suppose we need to load R model from python. How can we? Let's have a try.
+R and python are most popular language for data scientists and researchers. Researchers are often use both languages and sometime needs features of each language at the same time. Fortunately, there is a library named 'rpy2' which enables python to use R. let's suppose we need to load R model from python. How can we? Let's have a try.
 
 # Requirements
 + rpy2 library for python
@@ -78,7 +78,9 @@ class Model(object):
         self.model = r.readRDS(model_rds_path)
 
         with open(model_dep_path, "rt") as f:
-            model_dep_list = [ importr(dep.strip()) for dep in f.readlines( ) if dep.strip() != '' ]
+            model_dep_list = [importr(dep.strip())
+                              for dep in f.readlines()
+                              if dep.strip()!='']
 
         return self
 
