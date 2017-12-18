@@ -1,11 +1,9 @@
 ---
 layout: post
-title:  "Expose Docker Ports"
+title:  "How to Expose Docker Ports"
 date:   2017-12-18 00:03:55 +0900
 categories: Docker
 ---
-
-# How to Expose Docker Ports
 
 + Method 1: Using Docker file
     + EXPOSE 5000-9999
