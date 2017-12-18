@@ -63,7 +63,6 @@ class Model(object):
     model : R object
     """
 
-
     def __init__(self):
         self.model = None
 
@@ -71,15 +70,11 @@ class Model(object):
         model_rds_path = "{}.rds".format(path)
         model_dep_path = "{}.dep".format(path)
 
-        print("="*30)
-        print("load model from: {}".format(model_rds_path))
         self.model = r.readRDS(model_rds_path)
-        
-        print("load model dep from: {}".format(model_dep_path))
+
         with open(model_dep_path, "rt") as f:
             model_dep_list = [ importr(dep.strip()) for dep in f.readlines( ) if dep.strip() != '' ]
 
-        print("="*30)
         return self
 
     def predict(self, X):
@@ -102,6 +97,7 @@ class Model(object):
 
         pred = r.predict(self.model, X, probability=True)
         probs = r.attr(pred, "probabilities")
+
         return np.array(probs)
 
 ```
@@ -126,6 +122,5 @@ model = Model().load(MODEL_PATH)
 pred = model.predict(X)
 
 # Example output
-print("="*30)
 print(pred)
 ```
