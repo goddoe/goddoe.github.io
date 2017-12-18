@@ -1,12 +1,17 @@
 ---
 layout: post
-title:  "How to use R model in python"
+title:  "How to use R model in Python"
 date:   2017-12-18 00:03:55 +0900
 categories: [R, Machine Learning]
 ---
 
 # Introduction 
-There is someone wants to use R model in python. Fortunately, there is library named 'rpy2' which enables python to use R. Let's have a try. 
+R and python are most popular language for data scientist and researchers. Researchers are often use both languages and sometime needs features of each language at the same time. Fortunately, there is a library named 'rpy2' which enables python to use R. let's suppose we need to load R model from python. How can we? Let's have a try.
+
+# Requirements
++ rpy2 library for python
+    + rpy2 requires r-base 3.3+
+    + can install with "pip3 install rpy2"
 
 # R Model Example
 
@@ -124,3 +129,7 @@ pred = model.predict(X)
 # Example output
 print(pred)
 ```
+
+# Conclusion
+With rpy2, we can use R features in python. Have fun and enjoy research. Thanks.
+
