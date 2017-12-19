@@ -6,7 +6,7 @@ categories: [R, Machine Learning]
 ---
 
 # Introduction 
-R and python are most popular language for data scientists and researchers. Researchers are often use both languages and sometime needs features of each language at the same time. Fortunately, there is a library named 'rpy2' which enables python to use R. let's suppose we need to load R model from python. How can we? Let's have a try.
+R and python are most popular languages for data scientists and researchers. Researchers are often use both languages and sometime needs features of each language at the same time. Fortunately, there is a library named 'rpy2' which enables python to use R. let's suppose we need to load R model from python. How can we? Let's have a try.
 
 # Requirements
 + rpy2 library for python
