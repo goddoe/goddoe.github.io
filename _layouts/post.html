@@ -18,7 +18,8 @@ layout: default
   {% endif %}
  
   <!-- disqus --> 
-  {% if page.comments %}
+
+  {% if page.comments != false %}
     {% include disqus_comments.html %}
   {% endif %}
 </div>
