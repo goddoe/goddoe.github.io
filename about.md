@@ -26,7 +26,7 @@ permalink: /about/
           <p>2009.3-2014.2 B.S. in Biotechnology from Kyungpook National University</p>
           <hr/>
           <h3>Interests</h3>
-          <p>Machine Learning, Computer Vision, Natural Language Processing, Question Answering System, Chatbot System, Entity Name Extraction, Startup</p>
+          <p>Machine Learning, Computer Vision, Natural Language Processing, Startup</p>
           <hr/>
 
           <h3>Publication</h3>
