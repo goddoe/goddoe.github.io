@@ -6,7 +6,7 @@ categories: [develop]
 ---
 
 # Introduction
-I'm doing a machine learning project for the bank recently. As traditional bank project, it has extremely isolated develop environment. The develop environment consists of client PC and develop server with local network but machine's cannot be connected to internet. Also, There is no exposed port except ssh port(22) for devleopment. Port opening is possible but it takes serveral days for bank's security issue. Like my situation, there are many projects which have retricted network environment but you need to use jupyter notebook. Then, check this out. 
+I'm doing a machine learning project for the bank recently. As traditional bank project, it has extremely isolated develop environment. The develop environment consists of client PC and develop server with local network but machine cannot be connected to internet. Also, There is no exposed port except ssh port(22) for devleopment. Port opening is possible but it takes serveral days for bank's security issue. Like my situation, there are many projects which have retricted network environment but you need to use jupyter notebook. Then, check this out. 
 
 # How to 
 
