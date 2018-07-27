@@ -138,11 +138,10 @@ permalink: /about/
           <img src="{{site.url}}/assets/imgs/ecothon_1.jpg" width="50%"/>
           <img src="{{site.url}}/assets/imgs/ecothon_2.jpg" width="50%"/>
 
-          <img src="{{site.url}}/assets/imgs/ecothon_3.jpg" width="50%"/>
+          <!--<img src="{{site.url}}/assets/imgs/ecothon_3.jpg" width="50%"/>-->
 
           </div>
       
-          <hr/>
           <div class='sect'>
               <h2> ... </h2>
           </div>
