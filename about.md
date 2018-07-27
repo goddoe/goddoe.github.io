@@ -117,7 +117,7 @@ permalink: /about/
           </div>
 
           <div class='sect'>
-              <h2> There are more projects. The projects are not updated yet!</h2>
+              <h2> ... </h2>
           </div>
                 
           <hr/>
@@ -144,7 +144,7 @@ permalink: /about/
       
           <hr/>
           <div class='sect'>
-              <h2> There are more prizes. The prizes are not updated yet!</h2>
+              <h2> ... </h2>
           </div>
 
         </div><!-- /.blog-post -->
