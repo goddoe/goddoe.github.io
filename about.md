@@ -95,7 +95,7 @@ permalink: /about/
           <div class='sect'> 
           <h4>Tracking of 3D Path of Traffic Sign, at KNU in 2014~2015</h4>
           <p>Detecting Traffic Sign and Finding 3D path of Traffic Sign using Stereo Camera. Support Vector Machine, Multi-Layer Neural Network, Stero Vision and Several Computer Vision Techniques ared used </p>
-          <iframe width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/GOdCAsdkJg0" frameborder="0" allowfullscreen></iframe>
           </div>
 
           <hr/>
