@@ -19,7 +19,8 @@ permalink: /about/
           <br/>
 
           <h3>Career</h3>
-          <p>2016.2-Current Machine Learning Researcher in Nomad Connection.</p>
+          <p>2018.7-Current Researcher at Naver.</p>
+          <p>2016.2-2018.7 Researcher at Nomad Connection.</p>
           <hr/>
           <h3>Education</h3>
           <p>2014.3-2016.2 M.S. in Computer Science & Engineering from Kyungpook National University </p>
@@ -36,6 +37,20 @@ permalink: /about/
           <hr/>
 
           <h3>Projects</h3>
+
+          <div class='sect'>
+          <h4>Clova AI App/Speaker, at Naver in 2018</h4>
+          <p>Developing dialog management engine of Clova AI App and Clova AI Speaker.</p>
+          </div>
+
+          <hr/>
+
+          <div class='sect'>
+          <h4>Intent Classifier and Sentence Encoder for Chatbot (in Shinhan bank app named SOL), at Nomad Connection in 2018</h4>
+          <p>Intent Classifier for classifying queries and Sentence Encoder for matching queries with similar pre-defined questions. Sentence Encoder is used to route ambiguous user queries to pre-defined questions which chatbot can solve.</p>
+          </div>
+
+          <hr/>
 
           <div class='sect'>
           <h4>ID Card OCR Recognition for Non-face-to-face Authentication, at Nomad Connection in 2017</h4>
