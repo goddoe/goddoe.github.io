@@ -31,6 +31,7 @@ Change parameters of '/etc/ssh/sshd_config' like below
 X11Forwarding yes
 X11DisplayOffset 10
 X11UseLocalhost no
+UseLogin no
 ...
 ```
 
