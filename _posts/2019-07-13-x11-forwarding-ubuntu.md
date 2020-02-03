@@ -49,7 +49,7 @@ Make sure you have installed X11 on your local  machine
 
 ```bash
 $ brew cask install xquartz
-$ ssh -X username@remotehost
+$ ssh -CY username@remotehost
 $ echo $DISPLAY # veryfy that your `DISPLAY` is not empty
 $ xeyes # verify you have X11
 
