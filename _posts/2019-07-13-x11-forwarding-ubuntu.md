@@ -17,7 +17,7 @@ ssh username@remotehost
 ```
 
 
-Install that we need
+Install what we need
 
 ```bash
 $ sudo apt install xorg xauth openssh
