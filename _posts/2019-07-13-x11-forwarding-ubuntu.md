@@ -20,7 +20,7 @@ ssh username@remotehost
 Install what we need
 
 ```bash
-$ sudo apt install xorg xauth openssh
+$ sudo apt install xorg xauth openssh-server
 ```
 
 Change parameters of '/etc/ssh/sshd_config' like below 
