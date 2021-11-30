@@ -129,7 +129,7 @@ permalink: /about/
           <p>We got the grand prize of Ecothon. 환경부장관상, at <a href="http://www.qualc.co.kr">Qualc</a>  in 2016</p>
           <ul>
               <li><a href="http://news.naver.com/main/read.nhn?mode=LSD&mid=sec&oid=030&aid=0002533677&sid1=001&lfrom=kakao">기발한 `환경+ICT` 창업 아이디어 경쟁 에코톤…퀄크팀 대상</a></li>
-              <li><a href="http://www.jobnjoy.com/portal/joylife/campus_life_view.jsp?nidx=171681&depth1=2&depth2=1&depth3=3">자연을 지키는 창업 아이디어 ′2016 에코톤′…′퀄크′팀 대상, 최우수는 학생팀 ′공간오남매′</a></li>
+              <li><a href="https://magazine.hankyung.com/job-joy/article/202102193703d">자연을 지키는 창업 아이디어 ′2016 에코톤′…′퀄크′팀 대상, 최우수는 학생팀 ′공간오남매′</a></li>
           </ul>
           <!--<img src="{{site.url}}/assets/imgs/ecothon_1.jpg" width="50%"/>
 
