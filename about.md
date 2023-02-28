@@ -8,6 +8,9 @@ permalink: /about/
     <div class="blog-header">
       <h1 class="blog-title">Sung-ju Kim</h1>
       <p class="lead blog-description">Machine Learning Scientist, Engineer</p>
+
+      <a href="https://github.com/goddoe">github</a>
+      <a href="https://www.linkedin.com/in/sung-ju-kim-3b0406b0/">linkedin</a>
     </div>
 
     <div class="row">
@@ -19,12 +22,13 @@ permalink: /about/
           <br/>
 
           <h3>Career</h3>
-          <p>2018.7-Current Researcher at Naver.</p>
-          <p>2016.2-2018.7 Researcher at Nomad Connection.</p>
+          <p>2023.1-Current AI Researcher at Naver Cloud.</p>
+          <p>2018.7-2022.12 AI Researcher at Naver.</p>
+          <p>2016.2-2018.7 AI Researcher at Nomad Connection.</p>
           <hr/>
           <h3>Education</h3>
-          <p>2014.3-2016.2 M.S. in Computer Science & Engineering from Kyungpook National University </p>
-          <p>2009.3-2014.2 B.S. in Biotechnology from Kyungpook National University</p>
+          <p>2014.3-2016.2 M.S. in Computer Science & Engineering at Kyungpook National University </p>
+          <p>2009.3-2014.2 B.S. in Biotechnology at Kyungpook National University</p>
           <hr/>
           <h3>Interests</h3>
           <p>Machine Learning, Computer Vision, Natural Language Processing, Startup</p>
@@ -39,7 +43,7 @@ permalink: /about/
           <h3>Projects</h3>
 
           <div class='sect'>
-          <h4>Clova AI App/Speaker, at Naver in 2018</h4>
+          <h4>Clova AI App/Speaker, at Naver in 2018~Current</h4>
           <p>Developing dialog management engine of Clova AI App and Clova AI Speaker.</p>
           </div>
 
