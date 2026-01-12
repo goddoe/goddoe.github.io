@@ -148,7 +148,7 @@ Team Qualc, 2016
 **네이버 클라우드**, 테크 리드 (2023.01 - 현재)<br/>
 Hyperscale AI, 성남, 대한민국
 
-- [HyperCLOVA X 32B THINK Project](https://arxiv.org/abs/2601.03286) 모델 개발 및 SWE Agent 연구에 기여. SFT/RL 데이터셋 생성, SWE Agent RL 학습 환경 개발, General 및 SWE Agent RL 단계 모델 학습 담당. 2025
+- [HyperCLOVA X 32B THINK 프로젝트](https://arxiv.org/abs/2601.03286) 모델 개발 및 SWE Agent 연구에 기여. SFT/RL 데이터셋 생성, SWE Agent RL 학습 환경 개발, General 및 SWE Agent RL 단계 모델 학습 담당. 2025
 - [HyperCLOVA X THINK 프로젝트](https://arxiv.org/abs/2506.22403) 핵심 기여자 중 한 명으로 참여. 2025
 - 네이버 내부 개발자용 GitHub Copilot 유사 제품 및 모델 개발 팀 리드. 2023-2024
 - [HyperCLOVA X 프로젝트](https://arxiv.org/abs/2404.01954) 기술 리드 중 한 명으로 참여. 2024
