@@ -67,6 +67,8 @@ permalink: /about/
 
 <div class="lang-en" markdown="1">
 
+Currently working on reinforcement learning for LLM agents, with a focus on enhancing their software engineering capabilities. Previously, I have conducted research and development in NLP, dialogue systems, information retrieval, embeddings, and question answering.
+
 ## Experience
 
 **NAVER Cloud**, Tech Lead (2023.01 - Present)<br/>
@@ -138,6 +140,8 @@ Team Qualc, 2016
 </div>
 
 <div class="lang-ko" markdown="1">
+
+현재 LLM 에이전트의 소프트웨어 엔지니어링 능력 향상에 초점을 맞춘 강화학습 연구를 진행하고 있습니다. 이전에는 NLP, 대화 시스템, 정보 검색, 임베딩, 질의응답 분야에서 연구 개발을 수행했습니다.
 
 ## 경력
 
