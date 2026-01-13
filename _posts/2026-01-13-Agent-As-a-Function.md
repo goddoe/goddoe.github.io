@@ -47,106 +47,117 @@ But now, LLM Agents are no longer just chatbots. They are becoming components wi
 
 I think of this as "Agent as a Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
 
-Let me show this with a concrete example. Imagine we need a `fix_bug` function that takes a bug description and returns working code.
+Let me show this with a concrete example. Imagine we need a function that downloads a dataset from HuggingFace and normalizes it to OpenAI message format. This is a real task I've built and use at my company.
 
 **Approach 1: Single LLM Call**
 
 ```python
-def fix_bug(issue: str) -> str:
-    return llm.complete(f"Fix this bug: {issue}")
+def normalize_dataset(dataset_name: str) -> list:
+    return llm.complete(f"Convert {dataset_name} to OpenAI format")
 ```
 
-Simple, but unreliable. The LLM might hallucinate, generate syntax errors, or produce code that doesn't actually fix the bug. There's no verification.
+This doesn't even make sense. The LLM can't actually download data or write files. It can only generate text based on what it knows.
 
 **Approach 2: LLM Workflow**
 
 ```python
-def fix_bug(issue: str) -> str:
-    # Step 1: Analyze
-    analysis = llm.complete(f"Analyze this bug: {issue}")
+def normalize_dataset(dataset_name: str) -> list:
+    # Step 1: Search for dataset structure
+    schema = web_search(f"{dataset_name} huggingface schema")
 
-    # Step 2: Search for similar issues
-    references = web_search(f"how to fix {analysis}")
+    # Step 2: Generate conversion code
+    code = llm.complete(f"Write code to convert {schema} to OpenAI format")
 
-    # Step 3: Generate fix
-    fix = llm.complete(f"Based on {references}, generate fix for {issue}")
-
-    # Step 4: Format
-    return llm.complete(f"Format this code properly: {fix}")
+    # Step 3: Execute
+    exec(code)
+    return load_result()
 ```
 
-Better structure, but still a fixed pipeline. If step 3 fails, we can't go back to step 2. No iteration, no self-correction.
+Fixed pipeline. If the generated code fails, we can't retry with different approach. No validation that the output actually matches OpenAI format.
 
 **Approach 3: Agent as a Function**
 
 ```python
-system_prompt = """You are a bug fixing agent.
-Your goal is to fix the given bug and ensure tests pass.
+system_prompt = """You are a data normalization agent.
+Your goal is to download a HuggingFace dataset and convert it to OpenAI message format.
 
 ## Validation Rules
-- All existing tests must pass
-- New regression test must be added
-- Code must follow project style guide
+- Output must be valid JSON
+- Each message must have 'role' and 'content' fields
+- 'role' must be one of: 'system', 'user', 'assistant'
+- All conversations must be properly structured
+
+## Termination
+- Call task_complete(result) when validation passes
+- Call task_give_up(reason) if you've tried multiple approaches and none work
+- Call task_impossible(reason) if the task is fundamentally impossible
 """
 
 # BASE_TOOLS: capabilities to do the work
 BASE_TOOLS = [
-    read_file,        # read source code
-    write_file,       # write fix
-    web_search,       # search for solutions
-    run_terminal,     # execute commands
+    web_search,       # search for dataset documentation
+    read_file,        # read downloaded data
+    write_file,       # write conversion code and output
+    run_python,       # execute conversion code
 ]
 
-# VALIDATION_TOOLS: verify the fix works
+# VALIDATION_TOOLS: verify the output
 VALIDATION_TOOLS = [
-    run_tests,        # run test suite
-    run_linter,       # check style
+    validate_json_schema,  # check OpenAI message format
+    run_tests,             # run format validation tests
 ]
 
-fix_bug = create_agent_function(
-    name="fix_bug",
+# TERMINAL_TOOLS: explicit task completion
+TERMINAL_TOOLS = [
+    task_complete,    # success with result
+    task_give_up,     # tried but failed
+    task_impossible,  # fundamentally can't be done
+]
+
+normalize_hf_to_openai = create_agent_function(
+    name="normalize_hf_to_openai",
     system_prompt=system_prompt,
-    tools=BASE_TOOLS + VALIDATION_TOOLS,
-    max_iterations=10
+    tools=BASE_TOOLS + VALIDATION_TOOLS + TERMINAL_TOOLS,
+    max_iterations=15
 )
 
 # Call it like any other function
-result = fix_bug(issue="Login fails when password contains special characters")
+result = normalize_hf_to_openai(dataset="squad_v2")
 ```
 
-The agent reads the codebase, searches for solutions, writes a fix, runs tests, and if tests fail, it analyzes why and tries again. It loops until validation passes or max iterations reached.
+The agent searches for the dataset schema, writes conversion code, executes it, validates the output format, and if validation fails, it debugs and retries. It explicitly signals completion status via terminal tools.
 
-Here's how this fits into a larger system.
+Here's how this fits into a larger data pipeline.
 
 ```python
-def handle_bug_report(report: BugReport) -> Resolution:
-    # Autonomous function fixes the bug
-    fix_result = fix_bug(issue=report.description)
+def build_training_dataset(sources: list[str]) -> Dataset:
+    normalized = []
 
-    # Another autonomous function reviews the fix
-    review = review_code_change(
-        diff=fix_result.diff,
-        guidelines=team_guidelines
-    )
+    for source in sources:
+        # Each call is an autonomous function
+        result = normalize_hf_to_openai(dataset=source)
 
-    # Create PR if review passes
-    if review.approved:
-        pr = create_pull_request(
-            title=f"Fix: {report.title}",
-            branch=fix_result.branch
-        )
-        return Resolution(status="fixed", pr=pr)
+        if result.status == "complete":
+            normalized.extend(result.data)
+        elif result.status == "impossible":
+            log.warning(f"Skipping {source}: {result.reason}")
 
-    return Resolution(status="needs_review", details=review.comments)
+    # Another autonomous function for deduplication
+    deduped = deduplicate_conversations(normalized)
+
+    # Another for quality filtering
+    filtered = filter_low_quality(deduped, threshold=0.8)
+
+    return Dataset(filtered)
 ```
 
-Each autonomous function guarantees its output contract. The caller doesn't need to know an LLM is involved internally.
+Each autonomous function guarantees its output contract and explicitly signals success, failure, or impossibility. The caller handles each case appropriately.
 
-Why does this matter? When agents self-validate, you can trust their outputs in production. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its contract, you can build complex systems from these reliable building blocks.
+I'm building and using these patterns at my company. When agents self-validate, you can trust their outputs in production. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its contract, you can build complex systems from these reliable building blocks.
 
-Some practical tips for designing autonomous functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide the right validation tools because an agent can only validate what it can measure. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors.
+Some practical tips for designing autonomous functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide terminal tools so agents can explicitly signal completion status. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors.
 
-This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation, and validation tools, we create autonomous units that can be trusted as reliable components in larger systems.
+This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation, and explicit termination, we create autonomous units that can be trusted as reliable components in larger systems.
 
 </div>
 
@@ -166,106 +177,117 @@ LLM 도입 초기에는 단일 LLM API 호출 또는 LLM Workflow가 함수를 �
 
 저는 이것을 "Agent as a Function"이라고 생각합니다. 단순한 Input-Output 변환이 아니라 Agent가 목표를 받아 Tool을 사용해 자신의 작업을 Validation하고, 작업이 완료될 때까지 반복합니다.
 
-구체적인 예시로 설명하겠습니다. Bug Description을 받아서 동작하는 코드를 반환하는 `fix_bug` 함수가 필요하다고 가정해봅시다.
+구체적인 예시로 설명하겠습니다. HuggingFace에서 Dataset을 다운로드해서 OpenAI Message Format으로 정규화하는 함수가 필요하다고 가정해봅시다. 실제로 제가 회사에서 만들어서 사용하고 있는 Task입니다.
 
 **Approach 1: Single LLM Call**
 
 ```python
-def fix_bug(issue: str) -> str:
-    return llm.complete(f"Fix this bug: {issue}")
+def normalize_dataset(dataset_name: str) -> list:
+    return llm.complete(f"Convert {dataset_name} to OpenAI format")
 ```
 
-간단하지만 신뢰할 수 없습니다. LLM이 Hallucination을 하거나, Syntax Error를 생성하거나, 실제로 Bug를 고치지 못하는 코드를 만들 수 있습니다. Verification이 없습니다.
+이건 말이 안 됩니다. LLM은 실제로 데이터를 다운로드하거나 파일을 쓸 수 없습니다. 자기가 아는 것을 기반으로 텍스트만 생성할 수 있을 뿐입니다.
 
 **Approach 2: LLM Workflow**
 
 ```python
-def fix_bug(issue: str) -> str:
-    # Step 1: Analyze
-    analysis = llm.complete(f"Analyze this bug: {issue}")
+def normalize_dataset(dataset_name: str) -> list:
+    # Step 1: Search for dataset structure
+    schema = web_search(f"{dataset_name} huggingface schema")
 
-    # Step 2: Search for similar issues
-    references = web_search(f"how to fix {analysis}")
+    # Step 2: Generate conversion code
+    code = llm.complete(f"Write code to convert {schema} to OpenAI format")
 
-    # Step 3: Generate fix
-    fix = llm.complete(f"Based on {references}, generate fix for {issue}")
-
-    # Step 4: Format
-    return llm.complete(f"Format this code properly: {fix}")
+    # Step 3: Execute
+    exec(code)
+    return load_result()
 ```
 
-구조는 더 좋지만, 여전히 고정된 Pipeline입니다. Step 3이 실패해도 Step 2로 돌아갈 수 없습니다. Iteration도, Self-Correction도 없습니다.
+고정된 Pipeline입니다. 생성된 코드가 실패해도 다른 Approach로 재시도할 수 없습니다. Output이 실제로 OpenAI Format과 일치하는지 Validation도 없습니다.
 
 **Approach 3: Agent as a Function**
 
 ```python
-system_prompt = """You are a bug fixing agent.
-Your goal is to fix the given bug and ensure tests pass.
+system_prompt = """You are a data normalization agent.
+Your goal is to download a HuggingFace dataset and convert it to OpenAI message format.
 
 ## Validation Rules
-- All existing tests must pass
-- New regression test must be added
-- Code must follow project style guide
+- Output must be valid JSON
+- Each message must have 'role' and 'content' fields
+- 'role' must be one of: 'system', 'user', 'assistant'
+- All conversations must be properly structured
+
+## Termination
+- Call task_complete(result) when validation passes
+- Call task_give_up(reason) if you've tried multiple approaches and none work
+- Call task_impossible(reason) if the task is fundamentally impossible
 """
 
 # BASE_TOOLS: 작업 수행을 위한 기본 기능
 BASE_TOOLS = [
-    read_file,        # Source Code 읽기
-    write_file,       # Fix 작성
-    web_search,       # Solution 검색
-    run_terminal,     # Command 실행
+    web_search,       # Dataset Documentation 검색
+    read_file,        # 다운로드한 데이터 읽기
+    write_file,       # Conversion Code와 Output 작성
+    run_python,       # Conversion Code 실행
 ]
 
-# VALIDATION_TOOLS: Fix가 동작하는지 검증
+# VALIDATION_TOOLS: Output 검증
 VALIDATION_TOOLS = [
-    run_tests,        # Test Suite 실행
-    run_linter,       # Style 확인
+    validate_json_schema,  # OpenAI Message Format 확인
+    run_tests,             # Format Validation Test 실행
 ]
 
-fix_bug = create_agent_function(
-    name="fix_bug",
+# TERMINAL_TOOLS: 명시적 Task 종료
+TERMINAL_TOOLS = [
+    task_complete,    # 성공과 함께 결과 반환
+    task_give_up,     # 시도했지만 실패
+    task_impossible,  # 근본적으로 불가능한 Task
+]
+
+normalize_hf_to_openai = create_agent_function(
+    name="normalize_hf_to_openai",
     system_prompt=system_prompt,
-    tools=BASE_TOOLS + VALIDATION_TOOLS,
-    max_iterations=10
+    tools=BASE_TOOLS + VALIDATION_TOOLS + TERMINAL_TOOLS,
+    max_iterations=15
 )
 
 # 다른 함수처럼 호출
-result = fix_bug(issue="Login fails when password contains special characters")
+result = normalize_hf_to_openai(dataset="squad_v2")
 ```
 
-Agent는 Codebase를 읽고, Solution을 검색하고, Fix를 작성하고, Test를 실행합니다. Test가 실패하면 원인을 분석해서 다시 시도합니다. Validation이 통과하거나 Max Iteration에 도달할 때까지 Loop를 돕니다.
+Agent는 Dataset Schema를 검색하고, Conversion Code를 작성하고, 실행하고, Output Format을 Validation합니다. Validation이 실패하면 Debug하고 재시도합니다. Terminal Tool을 통해 명시적으로 완료 상태를 Signal합니다.
 
-이 함수가 더 큰 시스템에서 어떻게 사용되는지 보겠습니다.
+이 함수가 더 큰 Data Pipeline에서 어떻게 사용되는지 보겠습니다.
 
 ```python
-def handle_bug_report(report: BugReport) -> Resolution:
-    # Autonomous Function으로 Bug Fix
-    fix_result = fix_bug(issue=report.description)
+def build_training_dataset(sources: list[str]) -> Dataset:
+    normalized = []
 
-    # 다른 Autonomous Function으로 Code Review
-    review = review_code_change(
-        diff=fix_result.diff,
-        guidelines=team_guidelines
-    )
+    for source in sources:
+        # 각 호출이 Autonomous Function
+        result = normalize_hf_to_openai(dataset=source)
 
-    # Review 통과 시 PR 생성
-    if review.approved:
-        pr = create_pull_request(
-            title=f"Fix: {report.title}",
-            branch=fix_result.branch
-        )
-        return Resolution(status="fixed", pr=pr)
+        if result.status == "complete":
+            normalized.extend(result.data)
+        elif result.status == "impossible":
+            log.warning(f"Skipping {source}: {result.reason}")
 
-    return Resolution(status="needs_review", details=review.comments)
+    # 다른 Autonomous Function으로 Deduplication
+    deduped = deduplicate_conversations(normalized)
+
+    # 다른 Autonomous Function으로 Quality Filtering
+    filtered = filter_low_quality(deduped, threshold=0.8)
+
+    return Dataset(filtered)
 ```
 
-각 Autonomous Function이 Output Contract를 보장합니다. 호출하는 쪽에서는 내부에 LLM이 관여하는지 알 필요가 없습니다.
+각 Autonomous Function이 Output Contract를 보장하고 Success, Failure, Impossibility를 명시적으로 Signal합니다. 호출하는 쪽에서는 각 Case를 적절히 처리합니다.
 
-왜 이것이 중요할까요? Agent가 스스로 Validation하면 Production System에서 Output을 신뢰할 수 있습니다. 사람이 모든 LLM Output을 검토하는 대신 Agent가 내부적으로 Quality Assurance를 처리합니다. 그리고 각 Agent가 Contract를 보장하므로 이 신뢰할 수 있는 Building Block으로 복잡한 시스템을 구축할 수 있습니다.
+저는 이런 Pattern을 회사에서 직접 만들어서 사용하고 있습니다. Agent가 스스로 Validation하면 Production System에서 Output을 신뢰할 수 있습니다. 사람이 모든 LLM Output을 검토하는 대신 Agent가 내부적으로 Quality Assurance를 처리합니다. 그리고 각 Agent가 Contract를 보장하므로 이 신뢰할 수 있는 Building Block으로 복잡한 시스템을 구축할 수 있습니다.
 
-Autonomous Function 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 Output으로 이어지기 때문입니다. 적절한 Validation Tool을 제공해야 합니다. Agent는 측정할 수 있는 것만 Validation할 수 있기 때문입니다. Max Iteration, Timeout, Fallback 같은 합리적인 경계를 설정하세요.
+Autonomous Function 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 Output으로 이어지기 때문입니다. Terminal Tool을 제공해서 Agent가 명시적으로 완료 상태를 Signal할 수 있게 하세요. Max Iteration, Timeout, Fallback 같은 합리적인 경계를 설정하세요.
 
-"LLM as a Function"에서 "Agent as a Function"으로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화입니다. Goal-Driven Prompt, Self-Validation, Validation Tool을 결합함으로써 더 큰 시스템의 신뢰할 수 있는 컴포넌트로 사용할 수 있는 Autonomous Unit을 만들 수 있습니다.
+"LLM as a Function"에서 "Agent as a Function"으로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화입니다. Goal-Driven Prompt, Self-Validation, Explicit Termination을 결합함으로써 더 큰 시스템의 신뢰할 수 있는 컴포넌트로 사용할 수 있는 Autonomous Unit을 만들 수 있습니다.
 
 </div>
 
