@@ -49,113 +49,187 @@ I think of this as "Agent as a Function." Instead of a simple input-output trans
 
 There are three key components. First is goal definition via system prompt. The system prompt specifies what the agent needs to accomplish. It's not just instructions but a specification of the desired outcome, including validation rules so the agent knows when it has succeeded. Second is validation tools in the harness. The agent's execution environment provides tools for validation like syntax checkers, test runners, and schema validators. The agent uses these tools to self-assess its output before returning.
 
-Here's what an agent function looks like in practice.
+Here's what an autonomous function looks like in practice. Imagine we need a function that generates an API client from a specification. It needs to search for documentation, generate code, and validate that the code actually works.
 
 ```python
-# System prompt defines the goal and validation rules
-system_prompt = """You are a code review agent.
-Your goal is to analyze the given code and provide actionable feedback.
+system_prompt = """You are an API client generator.
+Your goal is to generate a working API client from the given spec.
 
 ## Validation Rules
-- All identified issues must include line numbers
-- Each suggestion must include a code example
-- Output must be valid JSON format
+- Generated code must pass syntax check
+- All endpoints in the spec must have corresponding methods
+- Unit tests must pass
+- Code must follow project style guide
 
-Review the code thoroughly and validate your output
-against these rules before returning.
+Use web search to find official API documentation.
+Generate code, then validate before returning.
 """
 
-# Harness provides validation tools
-def run_json_validator(output):
-    # Validates output is proper JSON
-    ...
+# BASE_TOOLS: fundamental capabilities for the task
+BASE_TOOLS = [
+    web_search,       # search for API docs and examples
+    read_file,        # read existing code for context
+    write_file,       # write generated code
+]
 
-def run_schema_checker(output, schema):
-    # Checks output matches expected schema
-    ...
+# VALIDATION_TOOLS: for self-assessment
+VALIDATION_TOOLS = [
+    run_syntax_check,  # verify code syntax
+    run_tests,         # execute unit tests
+    run_linter,        # check style compliance
+]
 
-# Create the agent function
-agent = create_agent(
+# Create the autonomous function with a descriptive name
+generate_api_client = create_agent_function(
+    name="generate_api_client",
     system_prompt=system_prompt,
-    tools=[run_json_validator, run_schema_checker],
-    max_iterations=5
+    tools=BASE_TOOLS + VALIDATION_TOOLS,
+    max_iterations=10
 )
 
-# Call the agent like a function
-result = agent(code_to_review)
+# Call it like any other function
+client_code = generate_api_client(spec="stripe_payments_v3")
 ```
 
-The agent autonomously loops until validation passes. It attempts the task, uses the validation tools to check its output, and if validation fails, it identifies issues and retries. The agent takes responsibility for the quality of its output. It doesn't just generate but verifies, iterates, and ensures correctness.
+The function autonomously loops until validation passes. It searches for docs, generates code, runs tests, and if something fails, it identifies the issue and retries. The function takes responsibility for its output quality.
 
-Why does this matter? When agents self-validate, you can trust their outputs in production systems. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its output contract, they can be composed into larger pipelines predictably.
+Here's how this function fits into a larger system.
 
-Some practical tips for designing agent functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide the right validation tools because an agent can only validate what it can measure. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors. And log the agent's reasoning and validation attempts for debugging.
+```python
+def setup_payment_integration(config: IntegrationConfig) -> IntegrationBundle:
+    # Generate API client using our autonomous function
+    client_code = generate_api_client(spec=config.api_spec)
 
-This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation rules, and validation tools, we create autonomous units that can be trusted to complete tasks correctly.
+    # Generate tests using another autonomous function
+    test_suite = generate_test_suite(
+        code=client_code,
+        coverage_target=0.8
+    )
+
+    # Generate documentation
+    docs = generate_api_docs(
+        code=client_code,
+        format="markdown"
+    )
+
+    return IntegrationBundle(
+        client=client_code,
+        tests=test_suite,
+        docs=docs
+    )
+
+# The caller doesn't need to know these are agent-powered
+bundle = setup_payment_integration(payment_config)
+```
+
+Each autonomous function guarantees its output contract, so they compose predictably into larger pipelines. The caller doesn't need to know an LLM is involved internally.
+
+Why does this matter? When agents self-validate, you can trust their outputs in production. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its contract, you can build complex systems from these reliable building blocks.
+
+Some practical tips for designing autonomous functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide the right validation tools because an agent can only validate what it can measure. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors. And log the reasoning and validation attempts for debugging.
+
+This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation rules, and validation tools, we create autonomous units that can be trusted as reliable components in larger systems.
 
 </div>
 
 <div class="lang-ko" markdown="1">
 
-두 번째로 공유하고 싶은 주제는 함수로서의 에이전트(Agent as a Function)입니다.
+두 번째로 공유하고 싶은 주제는 Agent as a Function입니다.
 
 **TL;DR**
 
-1. 과거에는 단일 LLM 호출 또는 LLM Workflow가 함수를 대체했다. 이제는 LLM 에이전트가 더 큰 시스템 내에서 함수를 대체할 수 있다.
-2. 시스템 프롬프트로 에이전트의 목표를 정의하고, 에이전트가 스스로 평가할 수 있도록 검증 규칙과 검증 도구를 제공한다.
-3. 에이전트는 작업이 검증될 때까지 자율적으로 반복하며, 이것을 "자율 함수"라고 부른다.
+1. 과거에는 단일 LLM 호출 또는 LLM Workflow가 함수를 대체했다. 이제는 LLM Agent가 더 큰 시스템 내에서 함수를 대체할 수 있다.
+2. System Prompt로 Agent의 목표를 정의하고, Agent가 스스로 평가할 수 있도록 Validation Rule과 Validation Tool을 제공한다.
+3. Agent는 작업이 Validation될 때까지 자율적으로 반복하며, 이것을 "Autonomous Function"이라고 부른다.
 
-LLM 도입 초기에는 단일 LLM API 호출 또는 LLM Workflow가 함수를 대체하는 역할을 했습니다. 프롬프트를 보내고 응답을 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
+LLM 도입 초기에는 단일 LLM API 호출 또는 LLM Workflow가 함수를 대체하는 역할을 했습니다. Prompt를 보내고 Response를 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
 
-하지만 이제 LLM 에이전트는 더 이상 챗봇에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
+하지만 이제 LLM Agent는 더 이상 Chatbot에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
 
-저는 이것을 "함수로서의 에이전트"라고 생각합니다. 단순한 입력-출력 변환이 아니라 에이전트가 목표를 받아 도구를 사용해 자신의 작업을 검증하고, 작업이 완료될 때까지 반복합니다.
+저는 이것을 "Agent as a Function"이라고 생각합니다. 단순한 Input-Output 변환이 아니라 Agent가 목표를 받아 Tool을 사용해 자신의 작업을 Validation하고, 작업이 완료될 때까지 반복합니다.
 
-세 가지 핵심 구성 요소가 있습니다. 첫째는 시스템 프롬프트를 통한 목표 정의입니다. 시스템 프롬프트는 에이전트가 무엇을 달성해야 하는지 명시하며, 단순한 지시사항이 아니라 원하는 결과의 명세입니다. 여기에 검증 규칙도 포함되어 에이전트가 언제 성공했는지 알 수 있습니다. 둘째는 하네스의 검증 도구입니다. 에이전트의 실행 환경은 구문 검사기, 테스트 실행기, 스키마 검증기 같은 검증 도구를 제공합니다. 에이전트는 이 도구들을 사용해 결과를 반환하기 전에 스스로 평가합니다.
+세 가지 핵심 구성 요소가 있습니다. 첫째는 System Prompt를 통한 목표 정의입니다. System Prompt는 Agent가 무엇을 달성해야 하는지 명시하며, 단순한 지시사항이 아니라 원하는 결과의 명세입니다. 여기에 Validation Rule도 포함되어 Agent가 언제 성공했는지 알 수 있습니다. 둘째는 Harness의 Validation Tool입니다. Agent의 실행 환경은 Syntax Checker, Test Runner, Schema Validator 같은 Validation Tool을 제공합니다. Agent는 이 Tool들을 사용해 결과를 반환하기 전에 스스로 평가합니다.
 
-실제로 에이전트 함수는 다음과 같은 모습입니다.
+실제로 Autonomous Function은 다음과 같은 모습입니다. API Spec으로부터 API Client를 생성하는 함수가 필요하다고 가정해봅시다. 문서를 검색하고, 코드를 생성하고, 코드가 실제로 동작하는지 Validation해야 합니다.
 
 ```python
-# 시스템 프롬프트로 목표와 검증 규칙을 정의
-system_prompt = """You are a code review agent.
-Your goal is to analyze the given code and provide actionable feedback.
+system_prompt = """You are an API client generator.
+Your goal is to generate a working API client from the given spec.
 
 ## Validation Rules
-- All identified issues must include line numbers
-- Each suggestion must include a code example
-- Output must be valid JSON format
+- Generated code must pass syntax check
+- All endpoints in the spec must have corresponding methods
+- Unit tests must pass
+- Code must follow project style guide
 
-Review the code thoroughly and validate your output
-against these rules before returning.
+Use web search to find official API documentation.
+Generate code, then validate before returning.
 """
 
-# 하네스가 검증 도구를 제공
-def run_json_validator(output):
-    # 출력이 올바른 JSON인지 검증
-    ...
+# BASE_TOOLS: Task 수행을 위한 기본 기능
+BASE_TOOLS = [
+    web_search,       # API 문서와 예제 검색
+    read_file,        # 기존 코드를 읽어 Context 파악
+    write_file,       # 생성된 코드 작성
+]
 
-def run_schema_checker(output, schema):
-    # 출력이 예상 스키마와 일치하는지 확인
-    ...
+# VALIDATION_TOOLS: Self-Assessment를 위한 도구
+VALIDATION_TOOLS = [
+    run_syntax_check,  # 코드 Syntax 검증
+    run_tests,         # Unit Test 실행
+    run_linter,        # Style 준수 확인
+]
 
-# 에이전트 함수 생성
-agent = create_agent(
+# 명확한 이름으로 Autonomous Function 생성
+generate_api_client = create_agent_function(
+    name="generate_api_client",
     system_prompt=system_prompt,
-    tools=[run_json_validator, run_schema_checker],
-    max_iterations=5
+    tools=BASE_TOOLS + VALIDATION_TOOLS,
+    max_iterations=10
 )
 
-# 함수처럼 에이전트 호출
-result = agent(code_to_review)
+# 다른 함수처럼 호출
+client_code = generate_api_client(spec="stripe_payments_v3")
 ```
 
-에이전트는 검증이 통과할 때까지 자율적으로 루프를 돕니다. 작업을 시도하고, 검증 도구로 출력을 확인하고, 검증이 실패하면 문제를 식별하고 재시도합니다. 에이전트는 출력의 품질에 책임을 집니다. 단순히 생성하는 것이 아니라 검증하고, 반복하고, 정확성을 보장합니다.
+함수는 Validation이 통과할 때까지 자율적으로 Loop를 돕니다. 문서를 검색하고, 코드를 생성하고, Test를 실행하고, 실패하면 문제를 식별해서 재시도합니다. 함수가 Output 품질에 책임을 집니다.
 
-왜 이것이 중요할까요? 에이전트가 스스로 검증하면 프로덕션 시스템에서 출력을 신뢰할 수 있습니다. 인간이 모든 LLM 출력을 검토하는 대신 에이전트가 내부적으로 품질 보증을 처리합니다. 그리고 각 에이전트가 출력 계약을 보장하므로 예측 가능하게 더 큰 파이프라인으로 조합할 수 있습니다.
+이 함수가 더 큰 시스템에서 어떻게 사용되는지 보겠습니다.
 
-에이전트 함수 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 출력으로 이어지기 때문입니다. 적절한 검증 도구를 제공해야 합니다. 에이전트는 측정할 수 있는 것만 검증할 수 있기 때문입니다. 최대 반복 횟수, 타임아웃, 폴백 동작 같은 합리적인 경계를 설정하세요. 그리고 디버깅을 위해 에이전트의 추론과 검증 시도를 로깅하세요.
+```python
+def setup_payment_integration(config: IntegrationConfig) -> IntegrationBundle:
+    # Autonomous Function으로 API Client 생성
+    client_code = generate_api_client(spec=config.api_spec)
 
-"함수로서의 LLM"에서 "함수로서의 에이전트"로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화입니다. 목표 지향적 프롬프트, 자체 검증 규칙, 검증 도구를 결합함으로써 작업을 올바르게 완료할 것으로 신뢰할 수 있는 자율 단위를 만들 수 있습니다.
+    # 다른 Autonomous Function으로 Test 생성
+    test_suite = generate_test_suite(
+        code=client_code,
+        coverage_target=0.8
+    )
+
+    # Documentation 생성
+    docs = generate_api_docs(
+        code=client_code,
+        format="markdown"
+    )
+
+    return IntegrationBundle(
+        client=client_code,
+        tests=test_suite,
+        docs=docs
+    )
+
+# 호출하는 쪽에서는 Agent가 관여하는지 알 필요가 없다
+bundle = setup_payment_integration(payment_config)
+```
+
+각 Autonomous Function이 Output Contract를 보장하므로, 예측 가능하게 더 큰 Pipeline으로 조합할 수 있습니다. 호출하는 쪽에서는 내부에 LLM이 관여하는지 알 필요가 없습니다.
+
+왜 이것이 중요할까요? Agent가 스스로 Validation하면 Production System에서 Output을 신뢰할 수 있습니다. 사람이 모든 LLM Output을 검토하는 대신 Agent가 내부적으로 Quality Assurance를 처리합니다. 그리고 각 Agent가 Contract를 보장하므로 이 신뢰할 수 있는 Building Block으로 복잡한 시스템을 구축할 수 있습니다.
+
+Autonomous Function 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 Output으로 이어지기 때문입니다. 적절한 Validation Tool을 제공해야 합니다. Agent는 측정할 수 있는 것만 Validation할 수 있기 때문입니다. Max Iteration, Timeout, Fallback 같은 합리적인 경계를 설정하세요. 그리고 Debugging을 위해 Reasoning과 Validation 시도를 Logging하세요.
+
+"LLM as a Function"에서 "Agent as a Function"으로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화입니다. Goal-Driven Prompt, Self-Validation Rule, Validation Tool을 결합함으로써 더 큰 시스템의 신뢰할 수 있는 컴포넌트로 사용할 수 있는 Autonomous Unit을 만들 수 있습니다.
 
 </div>
 
