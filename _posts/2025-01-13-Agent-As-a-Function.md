@@ -153,7 +153,7 @@ def build_training_dataset(sources: list[str]) -> Dataset:
 
 Each autonomous function guarantees its output contract and explicitly signals success, failure, or impossibility. The caller handles each case appropriately.
 
-I'm building and using these patterns at my company. When agents self-validate, you can trust their outputs in production. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its contract, you can build complex systems from these reliable building blocks.
+This isn't just a theoretical idea. I've been applying this approach in production systems, and it changes how you think about reliability. When an agent validates its own work before returning, you don't need a human checking every output. The agent handles that internally. And once you have a few of these autonomous functions that you can trust, composing them into larger workflows becomes straightforward.
 
 Some practical tips for designing autonomous functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide terminal tools so agents can explicitly signal completion status. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors.
 
@@ -173,7 +173,7 @@ This shift from "LLM as a Function" to "Agent as a Function" is a fundamental ch
 
 LLM 도입 초기에는 단일 LLM API 호출 또는 LLM Workflow가 함수를 대체하는 역할을 했습니다. Prompt를 보내고 Response를 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
 
-하지만 이제 LLM Agent는 더 이상 Chatbot에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
+하지만 이제 LLM Agent는 더 이상 챗봇에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
 
 저는 이것을 "Agent as a Function"이라고 생각합니다. 단순한 Input-Output 변환이 아니라 Agent가 목표를 받아 Tool을 사용해 자신의 작업을 Validation하고, 작업이 완료될 때까지 반복합니다.
 
@@ -283,7 +283,7 @@ def build_training_dataset(sources: list[str]) -> Dataset:
 
 각 Autonomous Function이 Output Contract를 보장하고 Success, Failure, Impossibility를 명시적으로 Signal합니다. 호출하는 쪽에서는 각 Case를 적절히 처리합니다.
 
-저는 이런 Pattern을 회사에서 직접 만들어서 사용하고 있습니다. Agent가 스스로 Validation하면 Production System에서 Output을 신뢰할 수 있습니다. 사람이 모든 LLM Output을 검토하는 대신 Agent가 내부적으로 Quality Assurance를 처리합니다. 그리고 각 Agent가 Contract를 보장하므로 이 신뢰할 수 있는 Building Block으로 복잡한 시스템을 구축할 수 있습니다.
+이건 단순한 이론이 아닙니다. 실제 업무에서 이 방식을 적용해보니 신뢰성에 대한 생각이 바뀌었습니다. Agent가 반환하기 전에 스스로 작업을 검증하면, 사람이 매번 Output을 확인할 필요가 없습니다. Agent가 내부적으로 처리하니까요. 그리고 신뢰할 수 있는 Autonomous Function이 몇 개 생기면, 이것들을 조합해서 더 큰 Workflow를 만드는 건 어렵지 않습니다.
 
 Autonomous Function 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 Output으로 이어지기 때문입니다. Terminal Tool을 제공해서 Agent가 명시적으로 완료 상태를 Signal할 수 있게 하세요. Max Iteration, Timeout, Fallback 같은 합리적인 경계를 설정하세요.
 
