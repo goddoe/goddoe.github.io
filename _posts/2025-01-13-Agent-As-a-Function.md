@@ -33,19 +33,19 @@ categories: [Research, Engineering, LLM, Agent]
 
 <div class="lang-en" markdown="1">
 
-It's time to use Agents as functions.
+Agents can work like functions too.
 
 **TL;DR**
 
-1. In the past, a single LLM call or LLM Workflow replaced a function. Now, an LLM Agent can replace a function within a larger system.
-2. Define the agent's goal via system prompt, and provide validation rules and validation tools so the agent can self-assess.
-3. The agent autonomously iterates until the task is validated, creating what I call an "autonomous function."
+1. Traditional functions follow a fixed trajectory, executing mechanically along predetermined paths.
+2. An Autonomous Function performs intelligent computation within the function, following a non-fixed trajectory until the goal is achieved.
+3. Define the goal via system prompt, provide validation rules and tools, and let the agent iterate until completion.
 
-In the early days of LLM adoption, a single LLM API call or LLM Workflow served as a function replacement. You would send a prompt, receive a response, and use that output in your application. This was already powerful because natural language became an interface for computation.
+Traditional functions execute along fixed trajectories. Given the same input, they follow predetermined paths mechanically and produce the same output. This is deterministic and predictable.
 
-But now, LLM Agents are no longer just chatbots. They are becoming components within larger systems, autonomous units that can accomplish complex tasks independently.
+But what if a function could think? What if it could adapt its approach based on intermediate results, try different strategies when one fails, and decide for itself when the task is truly complete?
 
-I call this intelligent computation capability "Agent as a Function" or "Autonomous Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
+I call this "Agent as a Function" or "Autonomous Function." Unlike traditional functions that follow fixed trajectories, an Autonomous Function performs intelligent computation within itself. It takes a goal, reasons about how to achieve it, validates its own work, and iterates along non-fixed trajectories until the goal is reached.
 
 Let me show this with a concrete example. Imagine we need a function that downloads a dataset from HuggingFace and normalizes it to OpenAI message format.
 
@@ -56,23 +56,18 @@ def normalize_dataset(dataset_name: str) -> list:
     return llm.complete(f"Convert {dataset_name} to OpenAI format")
 ```
 
-This doesn't even make sense. The LLM can't actually download data or write files. It can only generate text based on what it knows.
+A single LLM call cannot solve this problem.
 
 **Approach 2: LLM Workflow**
 
 ```python
 def normalize_dataset(dataset_name: str) -> list:
-    schema = web_search(f"{dataset_name} huggingface schema")
+    dataset_url = web_search(f"{dataset_name} huggingface download url")
+    raw_data = download(dataset_url)
 
     for attempt in range(3):
-        code = llm.complete(f"Write code to convert {schema} to OpenAI format")
-        try:
-            exec(code)
-            result = load_result()
-            if validate_openai_format(result):
-                return result
-        except Exception as e:
-            continue
+        code = llm.complete(f"Write code to convert to OpenAI format: {raw_data[:1000]}...")
+        # ... validation and execution logic ...
 
     raise RuntimeError("Failed after 3 attempts")
 ```
@@ -131,14 +126,14 @@ result = normalize_hf_to_openai(dataset="squad_v2")
 
 The agent searches for the dataset schema, writes conversion code, executes it, validates the output format, and if validation fails, it debugs and retries. It explicitly signals completion status via terminal tools.
 
-Here's how this fits into a larger data pipeline.
+The created Autonomous Function works like any other function within a system.
 
 ```python
 def build_training_dataset(sources: list[str]) -> Dataset:
     normalized = []
 
     for source in sources:
-        # Each call is an autonomous function
+        # Autonomous Function: data normalization
         result = normalize_hf_to_openai(dataset=source)
 
         if result.status == "complete":
@@ -146,38 +141,41 @@ def build_training_dataset(sources: list[str]) -> Dataset:
         elif result.status == "impossible":
             log.warning(f"Skipping {source}: {result.reason}")
 
-    # Another autonomous function for deduplication
+    # Autonomous Function: deduplication
     deduped = deduplicate_conversations(normalized)
 
-    # Another for quality filtering
+    # Autonomous Function: quality filtering
     filtered = filter_low_quality(deduped, threshold=0.8)
 
+    # Note: All three Autonomous Functions above can be combined into one
     return Dataset(filtered)
 ```
 
-Each autonomous function explicitly signals success, failure, or impossibility. The caller handles each case appropriately.
+Each Autonomous Component explicitly signals success, failure, or impossibility. The caller handles each case appropriately.
 
-The key when designing these is to define what "done" means clearly. Vague goals lead to vague outputs. You need terminal tools so the agent can signal completion. And you need boundaries like max iterations and timeouts.
+The key insight here is that we're moving from deterministic functions to goal-oriented functions. Traditional functions ask "what steps should I execute?" while Autonomous Functions ask "what goal should I achieve?"
 
-This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. Combining goal-driven prompts, self-validation, and explicit termination creates autonomous units that work as reliable components in larger systems.
+When designing these, clarity of the goal definition matters most. Vague goals lead to vague outputs. Terminal tools let the agent signal completion explicitly. And boundaries like max iterations and timeouts provide safety rails.
+
+This is a fundamental shift in how we think about computation. Instead of writing code that specifies every step, we define goals and let intelligent agents figure out the trajectory. The function becomes a container for intelligent problem-solving rather than a fixed sequence of operations.
 
 </div>
 
 <div class="lang-ko" markdown="1">
 
-이제는 Agent를 함수처럼 써야 합니다.
+Agent도 하나의 함수처럼 동작할 수 있습니다.
 
 **TL;DR**
 
-1. 예전에는 LLM 한 번 호출하거나 여러 단계 엮은 워크플로우가 함수를 대신했습니다. 이제는 Agent가 그 자리를 대신할 수 있습니다.
-2. 시스템 프롬프트로 목표를 정의하고, 검증 규칙과 검증 도구를 줘서 Agent가 스스로 결과를 평가하게 합니다.
-3. Agent는 검증 통과할 때까지 알아서 반복합니다. 이게 "자율 함수"입니다.
+1. 기존 함수는 고정된 trajectory를 따라 기계적으로 실행됩니다.
+2. Autonomous Function은 함수 내에서 지적 연산을 수행하여 고정되지 않은 trajectory를 따라 목적을 달성할 때까지 실행합니다.
+3. 시스템 프롬프트로 목표를 정의하고, 검증 규칙과 도구를 줘서 Agent가 스스로 완료할 때까지 반복하게 합니다.
 
-초기에는 LLM API 한 번 호출하거나, 여러 호출을 엮은 워크플로우가 함수를 대신했습니다. 프롬프트 보내고 응답 받아서 쓰는 방식이죠. 자연어가 연산 인터페이스가 됐다는 것만으로도 충분히 강력했습니다.
+기존 함수는 고정된 trajectory를 따라 실행됩니다. 같은 입력이 들어오면 정해진 경로를 기계적으로 따라가고, 같은 출력을 냅니다. 결정적이고 예측 가능합니다.
 
-근데 이제 Agent는 챗봇 수준을 넘어섰습니다. 큰 시스템 안에서 하나의 컴포넌트로 동작하고, 복잡한 작업을 혼자서 끝낼 수 있는 단위가 됐습니다.
+그런데 함수가 생각할 수 있다면 어떨까요? 중간 결과를 보고 접근 방식을 바꾸고, 하나가 실패하면 다른 전략을 시도하고, 작업이 정말 끝났는지 스스로 판단할 수 있다면?
 
-저는 이 지적 연산 기능을 "Agent as a Function" 또는 "Autonomous Function"이라고 부릅니다. 단순히 입력 받고 출력 뱉는 게 아니라, 목표를 받아서 도구로 자기 작업을 검증하고, 될 때까지 반복합니다.
+저는 이걸 "Agent as a Function" 또는 "Autonomous Function"이라고 부릅니다. 고정된 trajectory를 따르는 기존 함수와 달리, Autonomous Function은 함수 내에서 지적 연산을 수행합니다. 목표를 받아서 어떻게 달성할지 추론하고, 자기 작업을 검증하고, 목표에 도달할 때까지 고정되지 않은 trajectory를 따라 반복합니다.
 
 예시로 보겠습니다. HuggingFace에서 데이터셋 받아서 OpenAI 메시지 포맷으로 변환하는 함수가 필요하다고 해봅시다.
 
@@ -188,28 +186,23 @@ def normalize_dataset(dataset_name: str) -> list:
     return llm.complete(f"Convert {dataset_name} to OpenAI format")
 ```
 
-이건 말이 안 됩니다. LLM은 데이터를 다운로드하거나 파일을 쓸 수 없습니다. 아는 거 기반으로 텍스트만 생성할 뿐이죠.
+한번의 LLM 호출로는 이 문제를 해결할 수 없습니다.
 
 **Approach 2: LLM Workflow**
 
 ```python
 def normalize_dataset(dataset_name: str) -> list:
-    schema = web_search(f"{dataset_name} huggingface schema")
+    dataset_url = web_search(f"{dataset_name} huggingface download url")
+    raw_data = download(dataset_url)
 
     for attempt in range(3):
-        code = llm.complete(f"Write code to convert {schema} to OpenAI format")
-        try:
-            exec(code)
-            result = load_result()
-            if validate_openai_format(result):
-                return result
-        except Exception as e:
-            continue
+        code = llm.complete(f"Write code to convert to OpenAI format: {raw_data[:1000]}...")
+        # ... validation and execution logic ...
 
     raise RuntimeError("Failed after 3 attempts")
 ```
 
-재시도를 넣을 수 있지만, 다 하드코딩입니다. 몇 번 시도할지, 실패하면 뭘 할지, 언제 포기할지. LLM한테 결정권이 없습니다. 시키면 코드 생성할 뿐이죠. 결정은 전부 개발자가 코드 짤 때 내립니다. 런타임에 모델이 판단하는 게 아닙니다.
+재시도를 넣을 수 있지만, 다 하드코딩입니다. 몇 번 시도할지, 실패하면 뭘 할지, 언제 포기할지. LLM한테 결정권이 없습니다. 시키면 코드 생성할 뿐입니다. 결정은 전부 개발자가 코드 짤 때 내립니다. 런타임에 모델이 판단하는 게 아닙니다.
 
 **Approach 3: Agent as a Function**
 
@@ -246,7 +239,7 @@ VALIDATION_TOOLS = [
 # TERMINAL_TOOLS: 종료 신호
 TERMINAL_TOOLS = [
     task_complete,    # 성공
-    task_give_up,     # 실패
+    task_give_up,     # 포기
     task_impossible,  # 불가능
 ]
 
@@ -263,13 +256,14 @@ result = normalize_hf_to_openai(dataset="squad_v2")
 
 Agent가 스키마 찾고, 변환 코드 짜고, 실행하고, 결과 포맷 검증합니다. 검증 실패하면 디버깅하고 다시 시도합니다. 끝나면 종료 도구로 상태를 알립니다.
 
-이게 더 큰 파이프라인에서 어떻게 쓰이는지 보겠습니다.
+제작된 Autonomous Function은 시스템 내에 하나의 함수처럼 동작합니다.
 
 ```python
 def build_training_dataset(sources: list[str]) -> Dataset:
     normalized = []
 
     for source in sources:
+        # Autonomous Function: 데이터 정규화
         result = normalize_hf_to_openai(dataset=source)
 
         if result.status == "complete":
@@ -277,20 +271,23 @@ def build_training_dataset(sources: list[str]) -> Dataset:
         elif result.status == "impossible":
             log.warning(f"Skipping {source}: {result.reason}")
 
-    # 중복 제거
+    # Autonomous Function: 중복 제거
     deduped = deduplicate_conversations(normalized)
 
-    # 품질 필터링
+    # Autonomous Function: 품질 필터링
     filtered = filter_low_quality(deduped, threshold=0.8)
 
+    # 참고: 위 세 개의 Autonomous Function은 하나로 합칠 수도 있습니다
     return Dataset(filtered)
 ```
 
-각 자율 함수가 성공, 실패, 불가능을 명시적으로 알려주니까, 호출하는 쪽에서 각 경우를 적절히 처리할 수 있습니다.
+각 Autonomous Component가 성공, 실패, 불가능을 명시적으로 알려주니까, 호출하는 쪽에서 각 경우를 적절히 처리할 수 있습니다.
 
-설계할 때 중요한 건, "완료"가 뭔지 명확히 정의하는 겁니다. 목표가 모호하면 결과도 모호해집니다. 그리고 종료 도구를 꼭 줘야 Agent가 끝났다는 걸 알릴 수 있습니다. 최대 반복 횟수나 타임아웃 같은 경계도 필요합니다.
+핵심은 결정적 함수에서 목표 지향 함수로 이동하는 것입니다. 기존 함수는 "어떤 단계를 실행할까?"를 묻지만, Autonomous Function은 "어떤 목표를 달성할까?"를 묻습니다.
 
-"LLM을 함수처럼"에서 "Agent를 함수처럼"으로 바뀌는 건, AI 시스템 만드는 방식의 근본적인 변화입니다. 목표 중심 프롬프트, 자체 검증, 명시적 종료를 결합하면, 더 큰 시스템에서 신뢰할 수 있는 컴포넌트로 쓸 수 있는 자율 단위를 만들 수 있습니다.
+설계할 때는 목표 정의의 명확성이 가장 중요합니다. 모호한 목표는 모호한 결과로 이어집니다. 종료 도구는 Agent가 완료를 명시적으로 알릴 수 있게 합니다. 최대 반복 횟수나 타임아웃 같은 경계는 안전장치 역할을 합니다.
+
+이건 연산에 대한 사고방식의 근본적인 변화입니다. 모든 단계를 명시하는 코드를 작성하는 대신, 목표를 정의하고 지적 Agent가 trajectory를 알아내게 합니다. 함수가 고정된 연산 순서가 아니라 지적 문제 해결을 담는 컨테이너가 됩니다.
 
 </div>
 
