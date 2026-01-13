@@ -45,7 +45,7 @@ In the early days of LLM adoption, a single LLM API call or LLM Workflow served 
 
 But now, LLM Agents are no longer just chatbots. They are becoming components within larger systems, autonomous units that can accomplish complex tasks independently.
 
-I call this "Agent as a Function" or "Autonomous Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
+I call this intelligent computation capability "Agent as a Function" or "Autonomous Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
 
 Let me show this with a concrete example. Imagine we need a function that downloads a dataset from HuggingFace and normalizes it to OpenAI message format.
 
@@ -177,7 +177,7 @@ This shift from "LLM as a Function" to "Agent as a Function" is a fundamental ch
 
 근데 이제 Agent는 챗봇 수준을 넘어섰습니다. 큰 시스템 안에서 하나의 컴포넌트로 동작하고, 복잡한 작업을 혼자서 끝낼 수 있는 단위가 됐습니다.
 
-저는 이걸 "Agent as a Function" 또는 "Autonomous Function"이라고 부릅니다. 단순히 입력 받고 출력 뱉는 게 아니라, 목표를 받아서 도구로 자기 작업을 검증하고, 될 때까지 반복합니다.
+저는 이 지적 연산 기능을 "Agent as a Function" 또는 "Autonomous Function"이라고 부릅니다. 단순히 입력 받고 출력 뱉는 게 아니라, 목표를 받아서 도구로 자기 작업을 검증하고, 될 때까지 반복합니다.
 
 예시로 보겠습니다. HuggingFace에서 데이터셋 받아서 OpenAI 메시지 포맷으로 변환하는 함수가 필요하다고 해봅시다.
 
