@@ -33,65 +33,23 @@ categories: [Research, Engineering, LLM, Agent]
 
 <div class="lang-en" markdown="1">
 
-## From LLM Calls to Autonomous Agents
+The second topic I want to share is Agent as a Function.
 
-In the early days of LLM adoption, a single LLM API call served as a function replacement. You would send a prompt, receive a response, and use that output in your application. This was revolutionary—natural language became the new interface for computation.
+**TL;DR**
 
-But we've entered a new era. LLM Agents are no longer just chatbots responding to user queries. They are becoming **autonomous functions** within larger systems—components that can be called upon to accomplish complex tasks independently.
+1. In the past, a single LLM call replaced a function. Now, an LLM Agent can replace a function within a larger system.
+2. Define the agent's goal via system prompt, and provide validation rules and validation tools so the agent can self-assess.
+3. The agent autonomously iterates until the task is validated, creating what I call an "autonomous function."
 
-## The Evolution: LLM Call → Agent as a Function
+In the early days of LLM adoption, a single LLM API call served as a function replacement. You would send a prompt, receive a response, and use that output in your application. This was already powerful because natural language became an interface for computation.
 
-**Before (LLM as a Function):**
-```
-input → LLM Call → output
-```
-A simple, stateless transformation. One prompt in, one response out.
+But now, LLM Agents are no longer just chatbots. They are becoming components within larger systems, autonomous units that can accomplish complex tasks independently.
 
-**Now (Agent as a Function):**
-```
-input → Agent (goal + tools + validation) → verified output
-```
-A goal-driven, self-validating, autonomous execution unit.
+I think of this as "Agent as a Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
 
-## What Makes an Agent a Function?
+There are three key components. First is goal definition via system prompt. The system prompt specifies what the agent needs to accomplish. It's not just instructions but a specification of the desired outcome. Second is validation rules. The agent needs to know when it has succeeded, so I provide explicit validation rules for the agent to self-assess its output before returning. Third is validation tools in the harness. The agent's execution environment provides tools for validation like syntax checkers, test runners, schema validators, and external APIs for cross-referencing.
 
-An Agent as a Function consists of three key components:
-
-### 1. Goal Definition via System Prompt
-
-The system prompt defines **what** the agent needs to accomplish. It's not just instructions—it's a specification of the desired outcome.
-
-```
-You are a code review agent. Your goal is to:
-1. Analyze the given code for bugs and security issues
-2. Suggest improvements with concrete examples
-3. Ensure all suggestions are actionable and specific
-```
-
-### 2. Validation Rules for Self-Assessment
-
-The agent needs to know when it has succeeded. Validation rules allow the agent to **self-assess** its output before returning.
-
-```
-Validation Rules:
-- All identified issues must include line numbers
-- Each suggestion must include a code example
-- Security issues must reference relevant CWE/CVE if applicable
-- Output must be valid JSON format
-```
-
-### 3. Validation Tools in the Agent Harness
-
-The agent's harness (execution environment) provides **tools for validation**:
-
-- **Syntax checkers**: Verify code compiles/parses correctly
-- **Test runners**: Execute tests to verify functionality
-- **Schema validators**: Ensure output matches expected format
-- **External APIs**: Cross-reference with external sources
-
-## The Autonomous Loop
-
-When you call an Agent as a Function, it enters an autonomous loop:
+The autonomous loop looks like this.
 
 ```
 while not validated:
@@ -101,98 +59,35 @@ while not validated:
     4. If validation passes, return result
 ```
 
-This is fundamentally different from a simple LLM call. The agent **takes responsibility** for the quality of its output. It doesn't just generate—it verifies, iterates, and ensures correctness.
+This is fundamentally different from a simple LLM call. The agent takes responsibility for the quality of its output. It doesn't just generate but verifies, iterates, and ensures correctness.
 
-## Why This Matters
+Why does this matter? When agents self-validate, you can trust their outputs in production systems. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its output contract, they can be composed into larger pipelines predictably.
 
-### Reliability at Scale
-When agents self-validate, you can trust their outputs in production systems. No more hoping the LLM got it right—the agent confirms it.
+Some practical tips for designing agent functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide the right validation tools because an agent can only validate what it can measure. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors. And log the agent's reasoning and validation attempts for debugging.
 
-### Composability
-Agents as Functions can be composed into larger pipelines. Each agent guarantees its output contract, making system design predictable.
-
-### Reduced Human Oversight
-Instead of humans reviewing every LLM output, agents handle quality assurance internally. Humans only need to intervene on genuine edge cases.
-
-## Designing Effective Agent Functions
-
-1. **Be Specific About Success**: Vague goals lead to vague outputs. Define exactly what "done" looks like.
-
-2. **Provide the Right Tools**: An agent can only validate what it can measure. Give it the tools it needs.
-
-3. **Set Reasonable Boundaries**: Define max iterations, timeouts, and fallback behaviors for when validation repeatedly fails.
-
-4. **Design for Observability**: Log the agent's reasoning and validation attempts. You'll need this for debugging and improvement.
-
-## Conclusion
-
-The shift from "LLM as a Function" to "Agent as a Function" represents a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation rules, and validation tools, we create autonomous units that can be trusted to complete tasks correctly.
-
-This is not just an incremental improvement—it's a new paradigm. Welcome to the age of autonomous functions.
+This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation rules, and validation tools, we create autonomous units that can be trusted to complete tasks correctly.
 
 </div>
 
 <div class="lang-ko" markdown="1">
 
-## LLM 호출에서 자율 에이전트로
+두 번째로 공유하고 싶은 주제는 함수로서의 에이전트(Agent as a Function)입니다.
 
-LLM 도입 초기에는 단일 LLM API 호출이 함수를 대체하는 역할을 했습니다. 프롬프트를 보내고 응답을 받아 애플리케이션에서 사용하는 방식이었죠. 이것은 혁명적이었습니다—자연어가 새로운 연산 인터페이스가 되었으니까요.
+**TL;DR**
 
-하지만 우리는 새로운 시대에 진입했습니다. LLM 에이전트는 더 이상 사용자 쿼리에 응답하는 챗봇에 그치지 않습니다. 이제 에이전트는 더 큰 시스템 내에서 **자율적인 함수**가 되어가고 있습니다—복잡한 작업을 독립적으로 수행할 수 있는 컴포넌트 말입니다.
+1. 과거에는 단일 LLM 호출이 함수를 대체했다. 이제는 LLM 에이전트가 더 큰 시스템 내에서 함수를 대체할 수 있다.
+2. 시스템 프롬프트로 에이전트의 목표를 정의하고, 에이전트가 스스로 평가할 수 있도록 검증 규칙과 검증 도구를 제공한다.
+3. 에이전트는 작업이 검증될 때까지 자율적으로 반복하며, 이것을 "자율 함수"라고 부른다.
 
-## 진화: LLM 호출 → 함수로서의 에이전트
+LLM 도입 초기에는 단일 LLM API 호출이 함수를 대체하는 역할을 했습니다. 프롬프트를 보내고 응답을 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
 
-**이전 (함수로서의 LLM):**
-```
-입력 → LLM 호출 → 출력
-```
-단순하고 상태가 없는 변환. 하나의 프롬프트가 들어가고, 하나의 응답이 나옴.
+하지만 이제 LLM 에이전트는 더 이상 챗봇에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
 
-**현재 (함수로서의 에이전트):**
-```
-입력 → 에이전트 (목표 + 도구 + 검증) → 검증된 출력
-```
-목표 지향적이고, 자체 검증하는, 자율적인 실행 단위.
+저는 이것을 "함수로서의 에이전트"라고 생각합니다. 단순한 입력-출력 변환이 아니라 에이전트가 목표를 받아 도구를 사용해 자신의 작업을 검증하고, 작업이 완료될 때까지 반복합니다.
 
-## 에이전트를 함수로 만드는 것은 무엇인가?
+세 가지 핵심 구성 요소가 있습니다. 첫째는 시스템 프롬프트를 통한 목표 정의입니다. 시스템 프롬프트는 에이전트가 무엇을 달성해야 하는지 명시하며, 단순한 지시사항이 아니라 원하는 결과의 명세입니다. 둘째는 검증 규칙입니다. 에이전트는 언제 성공했는지 알아야 하므로, 에이전트가 결과를 반환하기 전에 스스로 평가할 수 있도록 명시적인 검증 규칙을 제공합니다. 셋째는 하네스의 검증 도구입니다. 에이전트의 실행 환경은 구문 검사기, 테스트 실행기, 스키마 검증기, 교차 검증을 위한 외부 API 같은 검증 도구를 제공합니다.
 
-함수로서의 에이전트는 세 가지 핵심 구성 요소로 이루어집니다:
-
-### 1. 시스템 프롬프트를 통한 목표 정의
-
-시스템 프롬프트는 에이전트가 **무엇을** 달성해야 하는지를 정의합니다. 단순한 지시사항이 아니라 원하는 결과의 명세입니다.
-
-```
-당신은 코드 리뷰 에이전트입니다. 목표는 다음과 같습니다:
-1. 주어진 코드의 버그와 보안 이슈 분석
-2. 구체적인 예시와 함께 개선 사항 제안
-3. 모든 제안은 실행 가능하고 구체적이어야 함
-```
-
-### 2. 자체 평가를 위한 검증 규칙
-
-에이전트는 언제 성공했는지 알아야 합니다. 검증 규칙은 에이전트가 결과를 반환하기 전에 **스스로 평가**할 수 있게 합니다.
-
-```
-검증 규칙:
-- 식별된 모든 이슈는 줄 번호를 포함해야 함
-- 각 제안에는 코드 예시가 포함되어야 함
-- 보안 이슈는 해당되는 경우 관련 CWE/CVE를 참조해야 함
-- 출력은 유효한 JSON 형식이어야 함
-```
-
-### 3. 에이전트 하네스의 검증 도구
-
-에이전트의 하네스(실행 환경)는 **검증을 위한 도구**를 제공합니다:
-
-- **구문 검사기**: 코드가 올바르게 컴파일/파싱되는지 확인
-- **테스트 실행기**: 기능을 검증하기 위한 테스트 실행
-- **스키마 검증기**: 출력이 예상 형식과 일치하는지 확인
-- **외부 API**: 외부 소스와 교차 검증
-
-## 자율 루프
-
-함수로서의 에이전트를 호출하면 자율 루프에 진입합니다:
+자율 루프는 다음과 같습니다.
 
 ```
 while not validated:
@@ -202,34 +97,13 @@ while not validated:
     4. 검증 통과 시, 결과 반환
 ```
 
-이것은 단순한 LLM 호출과 근본적으로 다릅니다. 에이전트는 출력의 품질에 **책임**을 집니다. 단순히 생성하는 것이 아니라 검증하고, 반복하고, 정확성을 보장합니다.
+이것은 단순한 LLM 호출과 근본적으로 다릅니다. 에이전트는 출력의 품질에 책임을 집니다. 단순히 생성하는 것이 아니라 검증하고, 반복하고, 정확성을 보장합니다.
 
-## 왜 이것이 중요한가
+왜 이것이 중요할까요? 에이전트가 스스로 검증하면 프로덕션 시스템에서 출력을 신뢰할 수 있습니다. 인간이 모든 LLM 출력을 검토하는 대신 에이전트가 내부적으로 품질 보증을 처리합니다. 그리고 각 에이전트가 출력 계약을 보장하므로 예측 가능하게 더 큰 파이프라인으로 조합할 수 있습니다.
 
-### 대규모 신뢰성
-에이전트가 스스로 검증하면 프로덕션 시스템에서 출력을 신뢰할 수 있습니다. LLM이 제대로 했기를 바라는 것이 아니라—에이전트가 확인합니다.
+에이전트 함수 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 출력으로 이어지기 때문입니다. 적절한 검증 도구를 제공해야 합니다. 에이전트는 측정할 수 있는 것만 검증할 수 있기 때문입니다. 최대 반복 횟수, 타임아웃, 폴백 동작 같은 합리적인 경계를 설정하세요. 그리고 디버깅을 위해 에이전트의 추론과 검증 시도를 로깅하세요.
 
-### 조합 가능성
-함수로서의 에이전트는 더 큰 파이프라인으로 조합될 수 있습니다. 각 에이전트가 출력 계약을 보장하므로 시스템 설계가 예측 가능해집니다.
-
-### 인간 감독 감소
-인간이 모든 LLM 출력을 검토하는 대신 에이전트가 내부적으로 품질 보증을 처리합니다. 인간은 진정한 엣지 케이스에만 개입하면 됩니다.
-
-## 효과적인 에이전트 함수 설계
-
-1. **성공을 구체적으로 정의하라**: 모호한 목표는 모호한 출력으로 이어집니다. "완료"가 어떤 모습인지 정확히 정의하세요.
-
-2. **적절한 도구를 제공하라**: 에이전트는 측정할 수 있는 것만 검증할 수 있습니다. 필요한 도구를 제공하세요.
-
-3. **합리적인 경계를 설정하라**: 검증이 반복적으로 실패할 때를 위해 최대 반복 횟수, 타임아웃, 폴백 동작을 정의하세요.
-
-4. **관찰 가능성을 위해 설계하라**: 에이전트의 추론과 검증 시도를 로깅하세요. 디버깅과 개선에 필요합니다.
-
-## 결론
-
-"함수로서의 LLM"에서 "함수로서의 에이전트"로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화를 나타냅니다. 목표 지향적 프롬프트, 자체 검증 규칙, 검증 도구를 결합함으로써 작업을 올바르게 완료할 것으로 신뢰할 수 있는 자율 단위를 만들 수 있습니다.
-
-이것은 단순한 점진적 개선이 아닙니다—새로운 패러다임입니다. 자율 함수의 시대에 오신 것을 환영합니다.
+"함수로서의 LLM"에서 "함수로서의 에이전트"로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화입니다. 목표 지향적 프롬프트, 자체 검증 규칙, 검증 도구를 결합함으로써 작업을 올바르게 완료할 것으로 신뢰할 수 있는 자율 단위를 만들 수 있습니다.
 
 </div>
 
