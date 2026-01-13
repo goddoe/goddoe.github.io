@@ -163,21 +163,21 @@ This is a fundamental shift in how we think about computation. Instead of writin
 
 <div class="lang-ko" markdown="1">
 
-Agent도 하나의 함수처럼 동작할 수 있습니다.
+Agent도 하나의 함수처럼 동작할 수 있다.
 
 **TL;DR**
 
-1. 기존 함수는 고정된 trajectory를 따라 기계적으로 실행됩니다.
-2. Autonomous Function은 함수 내에서 지적 연산을 수행하여 고정되지 않은 trajectory를 따라 목적을 달성할 때까지 실행합니다.
-3. 시스템 프롬프트로 목표를 정의하고, 검증 규칙과 도구를 줘서 Agent가 스스로 완료할 때까지 반복하게 합니다.
+1. 기존 함수는 고정된 trajectory를 따라 기계적으로 실행된다.
+2. Autonomous Function은 함수 내에서 지적 연산을 수행하여 고정되지 않은 trajectory를 따라 목적을 달성할 때까지 실행한다.
+3. 시스템 프롬프트로 목표를 정의하고, 검증 규칙과 도구를 줘서 Agent가 스스로 완료할 때까지 반복하게 한다.
 
-기존 함수는 고정된 trajectory를 따라 실행됩니다. 같은 입력이 들어오면 정해진 경로를 기계적으로 따라가고, 같은 출력을 냅니다. 결정적이고 예측 가능합니다.
+기존 함수는 고정된 trajectory를 따라 실행된다. 같은 입력이 들어오면 정해진 경로를 기계적으로 따라가고, 같은 출력을 낸다. 결정적이고 예측 가능하다.
 
-그런데 함수가 생각할 수 있다면 어떨까요? 중간 결과를 보고 접근 방식을 바꾸고, 하나가 실패하면 다른 전략을 시도하고, 작업이 정말 끝났는지 스스로 판단할 수 있다면?
+그런데 함수가 생각할 수 있다면 어떨까? 중간 결과를 보고 접근 방식을 바꾸고, 하나가 실패하면 다른 전략을 시도하고, 작업이 정말 끝났는지 스스로 판단할 수 있다면?
 
-저는 이걸 "Agent as a Function" 또는 "Autonomous Function"이라고 부릅니다. 고정된 trajectory를 따르는 기존 함수와 달리, Autonomous Function은 함수 내에서 지적 연산을 수행합니다. 목표를 받아서 어떻게 달성할지 추론하고, 자기 작업을 검증하고, 목표에 도달할 때까지 고정되지 않은 trajectory를 따라 반복합니다.
+이는 LLM Agent로 구현할 수 있고, 나는 이를 "Agent as a Function" 또는 "Autonomous Function"이라고 부른다. 고정된 trajectory를 따르는 기존 함수와 달리, Autonomous Function은 함수 내에서 지적 연산을 수행한다. 목표를 받아서 어떻게 달성할지 추론하고, 자기 작업을 검증하고, 목표에 도달할 때까지 고정되지 않은 trajectory를 따라 반복한다.
 
-예시로 보겠습니다. HuggingFace에서 데이터셋 받아서 OpenAI 메시지 포맷으로 변환하는 함수가 필요하다고 해봅시다.
+예시로 보자. HuggingFace에서 데이터셋 받아서 OpenAI 메시지 포맷으로 변환하는 함수가 필요하다고 해보자.
 
 **Approach 1: Single LLM Call**
 
@@ -186,7 +186,7 @@ def normalize_dataset(dataset_name: str) -> list:
     return llm.complete(f"Convert {dataset_name} to OpenAI format")
 ```
 
-한번의 LLM 호출로는 이 문제를 해결할 수 없습니다.
+한번의 LLM 호출로는 이 문제를 해결할 수 없다.
 
 **Approach 2: LLM Workflow**
 
@@ -202,7 +202,7 @@ def normalize_dataset(dataset_name: str) -> list:
     raise RuntimeError("Failed after 3 attempts")
 ```
 
-재시도를 넣을 수 있지만, 다 하드코딩입니다. 몇 번 시도할지, 실패하면 뭘 할지, 언제 포기할지. LLM한테 결정권이 없습니다. 시키면 코드 생성할 뿐입니다. 결정은 전부 개발자가 코드 짤 때 내립니다. 런타임에 모델이 판단하는 게 아닙니다.
+재시도를 넣을 수 있지만, 다 하드코딩이다. 몇 번 시도할지, 실패하면 뭘 할지, 언제 포기할지. LLM한테 결정권이 없다. 시키면 코드 생성할 뿐이다. 결정은 전부 개발자가 코드 짤 때 내린다. 런타임에 모델이 판단하는 게 아니다.
 
 **Approach 3: Agent as a Function**
 
@@ -254,9 +254,9 @@ normalize_hf_to_openai = create_agent_function(
 result = normalize_hf_to_openai(dataset="squad_v2")
 ```
 
-Agent가 스키마 찾고, 변환 코드 짜고, 실행하고, 결과 포맷 검증합니다. 검증 실패하면 디버깅하고 다시 시도합니다. 끝나면 종료 도구로 상태를 알립니다.
+Agent가 스키마 찾고, 변환 코드 짜고, 실행하고, 결과 포맷 검증한다. 검증 실패하면 디버깅하고 다시 시도한다. 끝나면 종료 도구로 상태를 알린다.
 
-제작된 Autonomous Function은 시스템 내에 하나의 함수처럼 동작합니다.
+제작된 Autonomous Function은 시스템 내에 하나의 함수처럼 동작한다.
 
 ```python
 def build_training_dataset(sources: list[str]) -> Dataset:
@@ -277,17 +277,17 @@ def build_training_dataset(sources: list[str]) -> Dataset:
     # Autonomous Function: 품질 필터링
     filtered = filter_low_quality(deduped, threshold=0.8)
 
-    # 참고: 위 세 개의 Autonomous Function은 하나로 합칠 수도 있습니다
+    # 참고: 위 세 개의 Autonomous Function은 하나로 합칠 수도 있다
     return Dataset(filtered)
 ```
 
-각 Autonomous Component가 성공, 실패, 불가능을 명시적으로 알려주니까, 호출하는 쪽에서 각 경우를 적절히 처리할 수 있습니다.
+각 Autonomous Component가 성공, 실패, 불가능을 명시적으로 알려주니까, 호출하는 쪽에서 각 경우를 적절히 처리할 수 있다.
 
-핵심은 결정적 함수에서 목표 지향 함수로 이동하는 것입니다. 기존 함수는 "어떤 단계를 실행할까?"를 묻지만, Autonomous Function은 "어떤 목표를 달성할까?"를 묻습니다.
+핵심은 결정적 함수에서 목표 지향 함수로 이동하는 것이다. 기존 함수는 "어떤 단계를 실행할까?"를 묻지만, Autonomous Function은 "어떤 목표를 달성할까?"를 묻는다.
 
-설계할 때는 목표 정의의 명확성이 가장 중요합니다. 모호한 목표는 모호한 결과로 이어집니다. 종료 도구는 Agent가 완료를 명시적으로 알릴 수 있게 합니다. 최대 반복 횟수나 타임아웃 같은 경계는 안전장치 역할을 합니다.
+설계할 때는 목표 정의의 명확성이 가장 중요하다. 모호한 목표는 모호한 결과로 이어진다. 종료 도구는 Agent가 완료를 명시적으로 알릴 수 있게 한다. 최대 반복 횟수나 타임아웃 같은 경계는 안전장치 역할을 한다.
 
-이건 연산에 대한 사고방식의 근본적인 변화입니다. 모든 단계를 명시하는 코드를 작성하는 대신, 목표를 정의하고 지적 Agent가 trajectory를 알아내게 합니다. 함수가 고정된 연산 순서가 아니라 지적 문제 해결을 담는 컨테이너가 됩니다.
+이건 연산에 대한 사고방식의 근본적인 변화다. 모든 단계를 명시하는 코드를 작성하는 대신, 목표를 정의하고 지적 Agent가 trajectory를 알아내게 한다. 함수가 고정된 연산 순서가 아니라 지적 문제 해결을 담는 컨테이너가 된다.
 
 </div>
 
