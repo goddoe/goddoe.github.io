@@ -33,7 +33,7 @@ categories: [Research, Engineering, LLM, Agent]
 
 <div class="lang-en" markdown="1">
 
-The second topic I want to share is Agent as a Function.
+It's time to use Agents as functions.
 
 **TL;DR**
 
@@ -47,7 +47,7 @@ But now, LLM Agents are no longer just chatbots. They are becoming components wi
 
 I think of this as "Agent as a Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
 
-Let me show this with a concrete example. Imagine we need a function that downloads a dataset from HuggingFace and normalizes it to OpenAI message format. This is a real task I've built and use at my company.
+Let me show this with a concrete example. Imagine we need a function that downloads a dataset from HuggingFace and normalizes it to OpenAI message format.
 
 **Approach 1: Single LLM Call**
 
@@ -155,33 +155,31 @@ def build_training_dataset(sources: list[str]) -> Dataset:
     return Dataset(filtered)
 ```
 
-Each autonomous function guarantees its output contract and explicitly signals success, failure, or impossibility. The caller handles each case appropriately.
+Each autonomous function explicitly signals success, failure, or impossibility. The caller handles each case appropriately.
 
-This isn't just a theoretical idea. I've been applying this approach in production systems, and it changes how you think about reliability. When an agent validates its own work before returning, you don't need a human checking every output. The agent handles that internally. And once you have a few of these autonomous functions that you can trust, composing them into larger workflows becomes straightforward.
+The key when designing these is to define what "done" means clearly. Vague goals lead to vague outputs. You need terminal tools so the agent can signal completion. And you need boundaries like max iterations and timeouts.
 
-Some practical tips for designing autonomous functions. Be specific about what "done" looks like because vague goals lead to vague outputs. Provide terminal tools so agents can explicitly signal completion status. Set reasonable boundaries like max iterations, timeouts, and fallback behaviors.
-
-This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. By combining goal-driven prompts, self-validation, and explicit termination, we create autonomous units that can be trusted as reliable components in larger systems.
+This shift from "LLM as a Function" to "Agent as a Function" is a fundamental change in how we build AI-powered systems. Combining goal-driven prompts, self-validation, and explicit termination creates autonomous units that work as reliable components in larger systems.
 
 </div>
 
 <div class="lang-ko" markdown="1">
 
-두 번째로 공유하고 싶은 주제는 Agent as a Function입니다.
+이제는 Agent를 함수처럼 써야 합니다.
 
 **TL;DR**
 
-1. 과거에는 단일 LLM 호출 또는 LLM Workflow가 함수를 대체했다. 이제는 LLM Agent가 더 큰 시스템 내에서 함수를 대체할 수 있다.
-2. System Prompt로 Agent의 목표를 정의하고, Agent가 스스로 평가할 수 있도록 Validation Rule과 Validation Tool을 제공한다.
-3. Agent는 작업이 Validation될 때까지 자율적으로 반복하며, 이것을 "Autonomous Function"이라고 부른다.
+1. 예전에는 LLM 한 번 호출하거나 여러 단계 엮은 워크플로우가 함수를 대신했습니다. 이제는 Agent가 그 자리를 대신할 수 있습니다.
+2. 시스템 프롬프트로 목표를 정의하고, 검증 규칙과 검증 도구를 줘서 Agent가 스스로 결과를 평가하게 합니다.
+3. Agent는 검증 통과할 때까지 알아서 반복합니다. 이게 "자율 함수"입니다.
 
-LLM 도입 초기에는 단일 LLM API 호출 또는 LLM Workflow가 함수를 대체하는 역할을 했습니다. Prompt를 보내고 Response를 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
+초기에는 LLM API 한 번 호출하거나, 여러 호출을 엮은 워크플로우가 함수를 대신했습니다. 프롬프트 보내고 응답 받아서 쓰는 방식이죠. 자연어가 연산 인터페이스가 됐다는 것만으로도 충분히 강력했습니다.
 
-하지만 이제 LLM Agent는 더 이상 챗봇에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
+근데 이제 Agent는 챗봇 수준을 넘어섰습니다. 큰 시스템 안에서 하나의 컴포넌트로 동작하고, 복잡한 작업을 혼자서 끝낼 수 있는 단위가 됐습니다.
 
-저는 이것을 "Agent as a Function"이라고 생각합니다. 단순한 Input-Output 변환이 아니라 Agent가 목표를 받아 Tool을 사용해 자신의 작업을 Validation하고, 작업이 완료될 때까지 반복합니다.
+이걸 "Agent as a Function"이라고 부릅니다. 단순히 입력 받고 출력 뱉는 게 아니라, 목표를 받아서 도구로 자기 작업을 검증하고, 될 때까지 반복합니다.
 
-구체적인 예시로 설명하겠습니다. HuggingFace에서 Dataset을 다운로드해서 OpenAI Message Format으로 정규화하는 함수가 필요하다고 가정해봅시다. 실제로 제가 회사에서 만들어서 사용하고 있는 Task입니다.
+예시로 보겠습니다. HuggingFace에서 데이터셋 받아서 OpenAI 메시지 포맷으로 변환하는 함수가 필요하다고 해봅시다.
 
 **Approach 1: Single LLM Call**
 
@@ -190,7 +188,7 @@ def normalize_dataset(dataset_name: str) -> list:
     return llm.complete(f"Convert {dataset_name} to OpenAI format")
 ```
 
-이건 말이 안 됩니다. LLM은 실제로 데이터를 다운로드하거나 파일을 쓸 수 없습니다. 자기가 아는 것을 기반으로 텍스트만 생성할 수 있을 뿐입니다.
+이건 말이 안 됩니다. LLM은 데이터를 다운로드하거나 파일을 쓸 수 없습니다. 아는 거 기반으로 텍스트만 생성할 뿐이죠.
 
 **Approach 2: LLM Workflow**
 
@@ -211,7 +209,7 @@ def normalize_dataset(dataset_name: str) -> list:
     raise RuntimeError("Failed after 3 attempts")
 ```
 
-Retry를 추가할 수 있지만, 모든 게 하드코딩되어 있습니다. 시도 횟수, 실패 시 행동, 포기 시점. LLM은 여기서 결정권이 없습니다. 요청받으면 코드를 생성할 뿐입니다. 모든 결정은 개발자가 코드 작성 시점에 내리고, 모델이 런타임에 내리는 게 아닙니다.
+재시도를 넣을 수 있지만, 다 하드코딩입니다. 몇 번 시도할지, 실패하면 뭘 할지, 언제 포기할지. LLM한테 결정권이 없습니다. 시키면 코드 생성할 뿐이죠. 결정은 전부 개발자가 코드 짤 때 내립니다. 런타임에 모델이 판단하는 게 아닙니다.
 
 **Approach 3: Agent as a Function**
 
@@ -231,25 +229,25 @@ Your goal is to download a HuggingFace dataset and convert it to OpenAI message 
 - Call task_impossible(reason) if the task is fundamentally impossible
 """
 
-# BASE_TOOLS: 작업 수행을 위한 기본 기능
+# BASE_TOOLS: 작업용 도구
 BASE_TOOLS = [
-    web_search,       # Dataset Documentation 검색
-    read_file,        # 다운로드한 데이터 읽기
-    write_file,       # Conversion Code와 Output 작성
-    run_python,       # Conversion Code 실행
+    web_search,       # 문서 검색
+    read_file,        # 데이터 읽기
+    write_file,       # 코드/결과 쓰기
+    run_python,       # 코드 실행
 ]
 
-# VALIDATION_TOOLS: Output 검증
+# VALIDATION_TOOLS: 검증용 도구
 VALIDATION_TOOLS = [
-    validate_json_schema,  # OpenAI Message Format 확인
-    run_tests,             # Format Validation Test 실행
+    validate_json_schema,  # 포맷 검증
+    run_tests,             # 테스트 실행
 ]
 
-# TERMINAL_TOOLS: 명시적 Task 종료
+# TERMINAL_TOOLS: 종료 신호
 TERMINAL_TOOLS = [
-    task_complete,    # 성공과 함께 결과 반환
-    task_give_up,     # 시도했지만 실패
-    task_impossible,  # 근본적으로 불가능한 Task
+    task_complete,    # 성공
+    task_give_up,     # 실패
+    task_impossible,  # 불가능
 ]
 
 normalize_hf_to_openai = create_agent_function(
@@ -263,16 +261,15 @@ normalize_hf_to_openai = create_agent_function(
 result = normalize_hf_to_openai(dataset="squad_v2")
 ```
 
-Agent는 Dataset Schema를 검색하고, Conversion Code를 작성하고, 실행하고, Output Format을 Validation합니다. Validation이 실패하면 Debug하고 재시도합니다. Terminal Tool을 통해 명시적으로 완료 상태를 Signal합니다.
+Agent가 스키마 찾고, 변환 코드 짜고, 실행하고, 결과 포맷 검증합니다. 검증 실패하면 디버깅하고 다시 시도합니다. 끝나면 종료 도구로 상태를 알립니다.
 
-이 함수가 더 큰 Data Pipeline에서 어떻게 사용되는지 보겠습니다.
+이게 더 큰 파이프라인에서 어떻게 쓰이는지 보겠습니다.
 
 ```python
 def build_training_dataset(sources: list[str]) -> Dataset:
     normalized = []
 
     for source in sources:
-        # 각 호출이 Autonomous Function
         result = normalize_hf_to_openai(dataset=source)
 
         if result.status == "complete":
@@ -280,22 +277,20 @@ def build_training_dataset(sources: list[str]) -> Dataset:
         elif result.status == "impossible":
             log.warning(f"Skipping {source}: {result.reason}")
 
-    # 다른 Autonomous Function으로 Deduplication
+    # 중복 제거
     deduped = deduplicate_conversations(normalized)
 
-    # 다른 Autonomous Function으로 Quality Filtering
+    # 품질 필터링
     filtered = filter_low_quality(deduped, threshold=0.8)
 
     return Dataset(filtered)
 ```
 
-각 Autonomous Function이 Output Contract를 보장하고 Success, Failure, Impossibility를 명시적으로 Signal합니다. 호출하는 쪽에서는 각 Case를 적절히 처리합니다.
+각 자율 함수가 성공, 실패, 불가능을 명시적으로 알려주니까, 호출하는 쪽에서 각 경우를 적절히 처리할 수 있습니다.
 
-이건 단순한 이론이 아닙니다. 실제 업무에서 이 방식을 적용해보니 신뢰성에 대한 생각이 바뀌었습니다. Agent가 반환하기 전에 스스로 작업을 검증하면, 사람이 매번 Output을 확인할 필요가 없습니다. Agent가 내부적으로 처리하니까요. 그리고 신뢰할 수 있는 Autonomous Function이 몇 개 생기면, 이것들을 조합해서 더 큰 Workflow를 만드는 건 어렵지 않습니다.
+설계할 때 중요한 건, "완료"가 뭔지 명확히 정의하는 겁니다. 목표가 모호하면 결과도 모호해집니다. 그리고 종료 도구를 꼭 줘야 Agent가 끝났다는 걸 알릴 수 있습니다. 최대 반복 횟수나 타임아웃 같은 경계도 필요합니다.
 
-Autonomous Function 설계를 위한 실용적인 팁입니다. "완료"가 어떤 모습인지 구체적으로 정의해야 합니다. 모호한 목표는 모호한 Output으로 이어지기 때문입니다. Terminal Tool을 제공해서 Agent가 명시적으로 완료 상태를 Signal할 수 있게 하세요. Max Iteration, Timeout, Fallback 같은 합리적인 경계를 설정하세요.
-
-"LLM as a Function"에서 "Agent as a Function"으로의 전환은 AI 기반 시스템 구축 방식의 근본적인 변화입니다. Goal-Driven Prompt, Self-Validation, Explicit Termination을 결합함으로써 더 큰 시스템의 신뢰할 수 있는 컴포넌트로 사용할 수 있는 Autonomous Unit을 만들 수 있습니다.
+"LLM을 함수처럼"에서 "Agent를 함수처럼"으로 바뀌는 건, AI 시스템 만드는 방식의 근본적인 변화입니다. 목표 중심 프롬프트, 자체 검증, 명시적 종료를 결합하면, 더 큰 시스템에서 신뢰할 수 있는 컴포넌트로 쓸 수 있는 자율 단위를 만들 수 있습니다.
 
 </div>
 
