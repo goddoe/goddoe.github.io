@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Agent As a Function"
-date:   2026-01-13 19:00:00 +0900
+date:   2025-01-13 19:00:00 +0900
 categories: [Research, Engineering, LLM, Agent]
 ---
 
