@@ -37,29 +37,55 @@ The second topic I want to share is Agent as a Function.
 
 **TL;DR**
 
-1. In the past, a single LLM call replaced a function. Now, an LLM Agent can replace a function within a larger system.
+1. In the past, a single LLM call or LLM Workflow replaced a function. Now, an LLM Agent can replace a function within a larger system.
 2. Define the agent's goal via system prompt, and provide validation rules and validation tools so the agent can self-assess.
 3. The agent autonomously iterates until the task is validated, creating what I call an "autonomous function."
 
-In the early days of LLM adoption, a single LLM API call served as a function replacement. You would send a prompt, receive a response, and use that output in your application. This was already powerful because natural language became an interface for computation.
+In the early days of LLM adoption, a single LLM API call or LLM Workflow served as a function replacement. You would send a prompt, receive a response, and use that output in your application. This was already powerful because natural language became an interface for computation.
 
 But now, LLM Agents are no longer just chatbots. They are becoming components within larger systems, autonomous units that can accomplish complex tasks independently.
 
 I think of this as "Agent as a Function." Instead of a simple input-output transformation, an agent takes a goal, uses tools to validate its own work, and iterates until the task is complete.
 
-There are three key components. First is goal definition via system prompt. The system prompt specifies what the agent needs to accomplish. It's not just instructions but a specification of the desired outcome. Second is validation rules. The agent needs to know when it has succeeded, so I provide explicit validation rules for the agent to self-assess its output before returning. Third is validation tools in the harness. The agent's execution environment provides tools for validation like syntax checkers, test runners, schema validators, and external APIs for cross-referencing.
+There are three key components. First is goal definition via system prompt. The system prompt specifies what the agent needs to accomplish. It's not just instructions but a specification of the desired outcome, including validation rules so the agent knows when it has succeeded. Second is validation tools in the harness. The agent's execution environment provides tools for validation like syntax checkers, test runners, and schema validators. The agent uses these tools to self-assess its output before returning.
 
-The autonomous loop looks like this.
+Here's what an agent function looks like in practice.
 
+```python
+# System prompt defines the goal and validation rules
+system_prompt = """You are a code review agent.
+Your goal is to analyze the given code and provide actionable feedback.
+
+## Validation Rules
+- All identified issues must include line numbers
+- Each suggestion must include a code example
+- Output must be valid JSON format
+
+Review the code thoroughly and validate your output
+against these rules before returning.
+"""
+
+# Harness provides validation tools
+def run_json_validator(output):
+    # Validates output is proper JSON
+    ...
+
+def run_schema_checker(output, schema):
+    # Checks output matches expected schema
+    ...
+
+# Create the agent function
+agent = create_agent(
+    system_prompt=system_prompt,
+    tools=[run_json_validator, run_schema_checker],
+    max_iterations=5
+)
+
+# Call the agent like a function
+result = agent(code_to_review)
 ```
-while not validated:
-    1. Attempt to complete the task
-    2. Use validation tools to check output
-    3. If validation fails, identify issues and retry
-    4. If validation passes, return result
-```
 
-This is fundamentally different from a simple LLM call. The agent takes responsibility for the quality of its output. It doesn't just generate but verifies, iterates, and ensures correctness.
+The agent autonomously loops until validation passes. It attempts the task, uses the validation tools to check its output, and if validation fails, it identifies issues and retries. The agent takes responsibility for the quality of its output. It doesn't just generate but verifies, iterates, and ensures correctness.
 
 Why does this matter? When agents self-validate, you can trust their outputs in production systems. Instead of humans reviewing every LLM output, agents handle quality assurance internally. And because each agent guarantees its output contract, they can be composed into larger pipelines predictably.
 
@@ -75,29 +101,55 @@ This shift from "LLM as a Function" to "Agent as a Function" is a fundamental ch
 
 **TL;DR**
 
-1. 과거에는 단일 LLM 호출이 함수를 대체했다. 이제는 LLM 에이전트가 더 큰 시스템 내에서 함수를 대체할 수 있다.
+1. 과거에는 단일 LLM 호출 또는 LLM Workflow가 함수를 대체했다. 이제는 LLM 에이전트가 더 큰 시스템 내에서 함수를 대체할 수 있다.
 2. 시스템 프롬프트로 에이전트의 목표를 정의하고, 에이전트가 스스로 평가할 수 있도록 검증 규칙과 검증 도구를 제공한다.
 3. 에이전트는 작업이 검증될 때까지 자율적으로 반복하며, 이것을 "자율 함수"라고 부른다.
 
-LLM 도입 초기에는 단일 LLM API 호출이 함수를 대체하는 역할을 했습니다. 프롬프트를 보내고 응답을 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
+LLM 도입 초기에는 단일 LLM API 호출 또는 LLM Workflow가 함수를 대체하는 역할을 했습니다. 프롬프트를 보내고 응답을 받아 애플리케이션에서 사용하는 방식이었죠. 자연어가 연산의 인터페이스가 되었기 때문에 이것만으로도 강력했습니다.
 
 하지만 이제 LLM 에이전트는 더 이상 챗봇에 그치지 않습니다. 더 큰 시스템 내의 컴포넌트가 되어가고 있고, 복잡한 작업을 독립적으로 수행할 수 있는 자율적인 단위가 되고 있습니다.
 
 저는 이것을 "함수로서의 에이전트"라고 생각합니다. 단순한 입력-출력 변환이 아니라 에이전트가 목표를 받아 도구를 사용해 자신의 작업을 검증하고, 작업이 완료될 때까지 반복합니다.
 
-세 가지 핵심 구성 요소가 있습니다. 첫째는 시스템 프롬프트를 통한 목표 정의입니다. 시스템 프롬프트는 에이전트가 무엇을 달성해야 하는지 명시하며, 단순한 지시사항이 아니라 원하는 결과의 명세입니다. 둘째는 검증 규칙입니다. 에이전트는 언제 성공했는지 알아야 하므로, 에이전트가 결과를 반환하기 전에 스스로 평가할 수 있도록 명시적인 검증 규칙을 제공합니다. 셋째는 하네스의 검증 도구입니다. 에이전트의 실행 환경은 구문 검사기, 테스트 실행기, 스키마 검증기, 교차 검증을 위한 외부 API 같은 검증 도구를 제공합니다.
+세 가지 핵심 구성 요소가 있습니다. 첫째는 시스템 프롬프트를 통한 목표 정의입니다. 시스템 프롬프트는 에이전트가 무엇을 달성해야 하는지 명시하며, 단순한 지시사항이 아니라 원하는 결과의 명세입니다. 여기에 검증 규칙도 포함되어 에이전트가 언제 성공했는지 알 수 있습니다. 둘째는 하네스의 검증 도구입니다. 에이전트의 실행 환경은 구문 검사기, 테스트 실행기, 스키마 검증기 같은 검증 도구를 제공합니다. 에이전트는 이 도구들을 사용해 결과를 반환하기 전에 스스로 평가합니다.
 
-자율 루프는 다음과 같습니다.
+실제로 에이전트 함수는 다음과 같은 모습입니다.
 
+```python
+# 시스템 프롬프트로 목표와 검증 규칙을 정의
+system_prompt = """You are a code review agent.
+Your goal is to analyze the given code and provide actionable feedback.
+
+## Validation Rules
+- All identified issues must include line numbers
+- Each suggestion must include a code example
+- Output must be valid JSON format
+
+Review the code thoroughly and validate your output
+against these rules before returning.
+"""
+
+# 하네스가 검증 도구를 제공
+def run_json_validator(output):
+    # 출력이 올바른 JSON인지 검증
+    ...
+
+def run_schema_checker(output, schema):
+    # 출력이 예상 스키마와 일치하는지 확인
+    ...
+
+# 에이전트 함수 생성
+agent = create_agent(
+    system_prompt=system_prompt,
+    tools=[run_json_validator, run_schema_checker],
+    max_iterations=5
+)
+
+# 함수처럼 에이전트 호출
+result = agent(code_to_review)
 ```
-while not validated:
-    1. 작업 완료 시도
-    2. 검증 도구를 사용하여 출력 확인
-    3. 검증 실패 시, 문제 식별 후 재시도
-    4. 검증 통과 시, 결과 반환
-```
 
-이것은 단순한 LLM 호출과 근본적으로 다릅니다. 에이전트는 출력의 품질에 책임을 집니다. 단순히 생성하는 것이 아니라 검증하고, 반복하고, 정확성을 보장합니다.
+에이전트는 검증이 통과할 때까지 자율적으로 루프를 돕니다. 작업을 시도하고, 검증 도구로 출력을 확인하고, 검증이 실패하면 문제를 식별하고 재시도합니다. 에이전트는 출력의 품질에 책임을 집니다. 단순히 생성하는 것이 아니라 검증하고, 반복하고, 정확성을 보장합니다.
 
 왜 이것이 중요할까요? 에이전트가 스스로 검증하면 프로덕션 시스템에서 출력을 신뢰할 수 있습니다. 인간이 모든 LLM 출력을 검토하는 대신 에이전트가 내부적으로 품질 보증을 처리합니다. 그리고 각 에이전트가 출력 계약을 보장하므로 예측 가능하게 더 큰 파이프라인으로 조합할 수 있습니다.
 
