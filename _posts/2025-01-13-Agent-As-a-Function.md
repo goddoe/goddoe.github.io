@@ -62,18 +62,22 @@ This doesn't even make sense. The LLM can't actually download data or write file
 
 ```python
 def normalize_dataset(dataset_name: str) -> list:
-    # Step 1: Search for dataset structure
     schema = web_search(f"{dataset_name} huggingface schema")
 
-    # Step 2: Generate conversion code
-    code = llm.complete(f"Write code to convert {schema} to OpenAI format")
+    for attempt in range(3):
+        code = llm.complete(f"Write code to convert {schema} to OpenAI format")
+        try:
+            exec(code)
+            result = load_result()
+            if validate_openai_format(result):
+                return result
+        except Exception as e:
+            continue
 
-    # Step 3: Execute
-    exec(code)
-    return load_result()
+    raise RuntimeError("Failed after 3 attempts")
 ```
 
-Fixed pipeline. If the generated code fails, we can't retry with different approach. No validation that the output actually matches OpenAI format.
+You can add retries, but everything is hardcoded. The number of attempts, what to do on failure, when to give up. The LLM has no say in this. It just generates code when asked. All decisions are made by the developer at write time, not by the model at runtime.
 
 **Approach 3: Agent as a Function**
 
@@ -192,18 +196,22 @@ def normalize_dataset(dataset_name: str) -> list:
 
 ```python
 def normalize_dataset(dataset_name: str) -> list:
-    # Step 1: Search for dataset structure
     schema = web_search(f"{dataset_name} huggingface schema")
 
-    # Step 2: Generate conversion code
-    code = llm.complete(f"Write code to convert {schema} to OpenAI format")
+    for attempt in range(3):
+        code = llm.complete(f"Write code to convert {schema} to OpenAI format")
+        try:
+            exec(code)
+            result = load_result()
+            if validate_openai_format(result):
+                return result
+        except Exception as e:
+            continue
 
-    # Step 3: Execute
-    exec(code)
-    return load_result()
+    raise RuntimeError("Failed after 3 attempts")
 ```
 
-고정된 Pipeline입니다. 생성된 코드가 실패해도 다른 Approach로 재시도할 수 없습니다. Output이 실제로 OpenAI Format과 일치하는지 Validation도 없습니다.
+Retry를 추가할 수 있지만, 모든 게 하드코딩되어 있습니다. 시도 횟수, 실패 시 행동, 포기 시점. LLM은 여기서 결정권이 없습니다. 요청받으면 코드를 생성할 뿐입니다. 모든 결정은 개발자가 코드 작성 시점에 내리고, 모델이 런타임에 내리는 게 아닙니다.
 
 **Approach 3: Agent as a Function**
 
