@@ -41,6 +41,8 @@ Agents can work like functions too.
 2. An Autonomous Function performs intelligent computation within the function, following a non-fixed trajectory until the goal is achieved.
 3. Define the goal via system prompt, provide validation rules and tools, and let the agent iterate until completion.
 
+> Strictly speaking, every input-output mapping is a function. But the "function" here refers to the functions we write in everyday code—the function or method in programming languages. Specifically, I'm referring to classical deterministic functions.
+
 Traditional functions execute along fixed trajectories. Given the same input, they follow predetermined paths mechanically and produce the same output. This is deterministic and predictable.
 
 But what if a function could think? What if it could adapt its approach based on intermediate results, try different strategies when one fails, and decide for itself when the task is truly complete?
@@ -170,6 +172,8 @@ Agent도 하나의 함수처럼 동작할 수 있다.
 1. 기존 함수는 고정된 trajectory를 따라 기계적으로 실행된다.
 2. Autonomous Function은 함수 내에서 지적 연산을 수행하여 고정되지 않은 trajectory를 따라 목적을 달성할 때까지 실행한다.
 3. 시스템 프롬프트로 목표를 정의하고, 검증 규칙과 도구를 줘서 Agent가 스스로 완료할 때까지 반복하게 한다.
+
+> 엄밀히 말하면 모든 입출력 매핑은 함수다. 하지만 여기서 말하는 "함수"는 우리가 일상적으로 작성하는 코드 속 함수, 즉 프로그래밍 언어의 function이나 method를 의미한다. 특히 고전적인 결정론적인 함수를 지칭한다.
 
 기존 함수는 고정된 trajectory를 따라 실행된다. 같은 입력이 들어오면 정해진 경로를 기계적으로 따라가고, 같은 출력을 낸다. 결정적이고 예측 가능하다.
 
