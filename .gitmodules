@@ -1,3 +1,6 @@
 [submodule "creative/what-lies-beyond"]
 	path = creative/what-lies-beyond
 	url = https://github.com/goddoe/what-lies-beyond.git
+[submodule "creative/what-lies-beyond-2"]
+	path = creative/what-lies-beyond-2
+	url = https://github.com/goddoe/what-lies-beyond-2.git

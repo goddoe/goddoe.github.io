@@ -89,4 +89,19 @@ Creative projects and experiments.
       </div>
     </a>
   </div>
+  <div class="project-card">
+    <a href="{{ site.baseurl }}/creative/what-lies-beyond-2/">
+      <div class="project-thumb">What Lies Beyond 2</div>
+      <div class="project-info">
+        <h3>What Lies Beyond 2</h3>
+        <p>A short narrative game — the sequel to What Lies Beyond. Canvas-based, playable in the browser.</p>
+        <div class="project-tags">
+          <span class="project-tag">Game</span>
+          <span class="project-tag">JavaScript</span>
+          <span class="project-tag">Canvas</span>
+          <span class="project-tag">Narrative</span>
+        </div>
+      </div>
+    </a>
+  </div>
 </div>

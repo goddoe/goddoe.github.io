@@ -44,4 +44,7 @@ paginate_path: "/blog/page:num/"
 exclude:
   - creative/what-lies-beyond/docs
   - creative/what-lies-beyond/.gitignore
+  - creative/what-lies-beyond-2/docs
+  - creative/what-lies-beyond-2/.gitignore
+  - creative/what-lies-beyond-2/.mcp.json
 
