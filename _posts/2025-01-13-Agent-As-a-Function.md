@@ -47,7 +47,7 @@ But some problems are easier to state as a goal than as a procedure. `book_cheap
 
 What if a function could do that working-out itself? Take a goal, reason about how to achieve it, try a strategy, check the result, try something else when it fails, and decide for itself when the task is truly complete?
 
-This is what I call "Agent as a Function" or "Autonomous Function." A traditional function executes a predefined algorithm; an Autonomous Function discovers the algorithm during execution. Where a traditional function follows a fixed trajectory, an Autonomous Function searches for one. It reasons, calls tools, validates its own work, and iterates until the goal is reached.
+I call this pattern "Agent as a Function," and the function it produces an "Autonomous Function." A traditional function executes a predefined algorithm; an Autonomous Function discovers the algorithm during execution. Where a traditional function follows a fixed trajectory, an Autonomous Function searches for one. It reasons, calls tools, validates its own work, and iterates until the goal is reached.
 
 Let me show this with a concrete example. Imagine we need a function that downloads a dataset from HuggingFace and normalizes it to OpenAI message format.
 
@@ -183,7 +183,7 @@ Agent도 하나의 함수처럼 동작할 수 있다.
 
 함수가 그 "알아내는 일"을 스스로 한다면 어떨까? 목표를 받아서 어떻게 달성할지 추론하고, 한 전략을 시도하고, 결과를 확인하고, 실패하면 다른 걸 시도하고, 작업이 정말 끝났는지 스스로 판단한다면?
 
-이걸 나는 "Agent as a Function" 또는 "Autonomous Function"이라고 부른다. 기존 함수가 미리 정의된 알고리즘을 실행한다면, Autonomous Function은 실행 중에 알고리즘을 발견한다. 기존 함수가 고정된 trajectory를 따른다면, Autonomous Function은 trajectory를 탐색한다. 추론하고, 도구를 호출하고, 자기 작업을 검증하면서, 목표에 도달할 때까지 반복한다.
+나는 이 패턴을 "Agent as a Function"이라고 부르고, 그렇게 만들어진 함수를 "Autonomous Function"이라고 부른다. 기존 함수가 미리 정의된 알고리즘을 실행한다면, Autonomous Function은 실행 중에 알고리즘을 발견한다. 기존 함수가 고정된 trajectory를 따른다면, Autonomous Function은 trajectory를 탐색한다. 추론하고, 도구를 호출하고, 자기 작업을 검증하면서, 목표에 도달할 때까지 반복한다.
 
 예시로 보자. HuggingFace에서 데이터셋 받아서 OpenAI 메시지 포맷으로 변환하는 함수가 필요하다고 해보자.
 
