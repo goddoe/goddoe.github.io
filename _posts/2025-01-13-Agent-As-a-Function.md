@@ -289,7 +289,7 @@ def build_training_dataset(sources: list[str]) -> Dataset:
     return Dataset(filtered)
 ```
 
-각 Autonomous Component가 성공, 실패, 불가능을 명시적으로 알려주니까, 호출하는 쪽에서 각 경우를 적절히 처리할 수 있다.
+각 Autonomous Component가 성공, 실패, 불가능을 명시적으로 알려주기 때문에 호출하는 쪽에서 각 경우를 적절히 처리할 수 있다.
 
 핵심은 procedure-driven 함수에서 goal-driven 함수로의 이동이다. 기존 함수는 "어떤 단계를 실행할까?"에 답하고, 그 답은 코드에 고정되어 있다. Autonomous Function은 "어떤 목표를 달성할까?"에 답하고, 단계는 런타임에 알아낸다.
 
