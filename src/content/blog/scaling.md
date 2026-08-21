@@ -1,37 +1,11 @@
 ---
-layout: post
-title:  "Scaling"
-date:   2024-06-01 23:44:00 +0900
-categories: [Research, Engineering]
+title: "Scaling"
+date: 2024-06-01
+description: "Find a methodology that scales monotonically, model its scaling curve, and let the curve decide where to invest next."
+tags: [Research, Engineering]
 ---
 
-<style>
-.lang-switch {
-  font-size: 0.85em;
-  color: #999;
-  margin-bottom: 20px;
-}
-.lang-switch a {
-  color: #999;
-  text-decoration: none;
-  cursor: pointer;
-}
-.lang-switch a:hover {
-  color: #666;
-}
-.lang-switch a.active {
-  color: #333;
-  font-weight: 600;
-}
-.lang-en, .lang-ko { display: none; }
-.lang-en.active, .lang-ko.active { display: block; }
-</style>
-
-<div class="lang-switch">
-  <a id="btn-en" onclick="setLang('en')">EN</a> | <a id="btn-ko" onclick="setLang('ko')">KO</a>
-</div>
-
-<div class="lang-en" markdown="1">
+:::en
 
 As an AI Research Engineer, I have conducted and designed various ML/DL, LLM experiments and have learned a lot from them.
 
@@ -65,9 +39,9 @@ And this is actually the most basic concept taught in ML 101. This is fundamenta
 
 Currently, many new AI, LLM technologies are emerging, and it seems like these basic aspects are often overlooked in recent research and experiments. However, LLMs are still ML, so I believe it is important to always remember and experiment with the fundamentals of ML. I believe that keeping the basics first is the faster way to solve problems.
 
-</div>
+:::
 
-<div class="lang-ko" markdown="1">
+:::ko
 
 AI 리서치 엔지니어로서 다양한 ML/DL, LLM 실험을 수행하고 설계하면서 많은 것을 배웠다.
 
@@ -101,27 +75,4 @@ AI/ML 문제에서 모델 크기 외에 스케일링할 수 있는 또 다른 �
 
 현재 많은 새로운 AI, LLM 기술이 등장하고 있고, 최근 연구와 실험에서 이러한 기본적인 측면이 종종 간과되는 것 같다. 하지만 LLM도 여전히 ML이므로, ML의 기본을 항상 기억하고 실험하는 것이 중요하다고 생각한다. 기본을 먼저 지키는 것이 문제를 해결하는 더 빠른 방법이라고 믿는다.
 
-</div>
-
-<script>
-function setLang(lang) {
-  document.querySelector('.lang-en').classList.remove('active');
-  document.querySelector('.lang-ko').classList.remove('active');
-  document.getElementById('btn-en').classList.remove('active');
-  document.getElementById('btn-ko').classList.remove('active');
-
-  document.querySelector('.lang-' + lang).classList.add('active');
-  document.getElementById('btn-' + lang).classList.add('active');
-  localStorage.setItem('lang', lang);
-}
-
-(function() {
-  var saved = localStorage.getItem('lang');
-  if (saved) {
-    setLang(saved);
-  } else {
-    var browserLang = navigator.language || navigator.userLanguage;
-    setLang(browserLang.startsWith('ko') ? 'ko' : 'en');
-  }
-})();
-</script>
+:::

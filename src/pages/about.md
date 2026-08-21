@@ -1,71 +1,18 @@
 ---
-layout: about_layout
-title: about
-permalink: /about/
+layout: ../layouts/MarkdownPageLayout.astro
+title: "About"
+heading: "Sungju Kim"
+subtitle: "AI Research Engineer"
+bilingual: true
 ---
-<style>
-.about-header {
-  text-align: center;
-  padding: 40px 0 30px;
-  margin-bottom: 30px;
-  border-bottom: 1px solid #eee;
-}
-.about-header h1 {
-  margin: 0 0 15px;
-  font-size: 2.2em;
-  font-weight: 600;
-}
-.about-links {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-.about-links a {
-  display: inline-block;
-  padding: 8px 20px;
-  border: 1px solid #333;
-  border-radius: 4px;
-  text-decoration: none;
-  color: #333;
-  font-size: 0.9em;
-  transition: all 0.2s;
-}
-.about-links a:hover {
-  background: #333;
-  color: #fff;
-}
-.lang-switch {
-  font-size: 0.8em;
-  color: #999;
-}
-.lang-switch a {
-  color: #999;
-  text-decoration: none;
-  cursor: pointer;
-}
-.lang-switch a:hover {
-  color: #666;
-}
-.lang-switch a.active {
-  color: #333;
-}
-.lang-en, .lang-ko { display: none; }
-.lang-en.active, .lang-ko.active { display: block; }
-</style>
 
-<div class="about-header">
-  <h1>Sungju Kim</h1>
-  <div class="about-links">
-    <a href="https://www.linkedin.com/in/sungju-kim-3b0406b0/">LinkedIn</a>
-    <a href="https://github.com/goddoe">GitHub</a>
-  </div>
-  <div class="lang-switch">
-    <a id="btn-en" onclick="setLang('en')">EN</a> | <a id="btn-ko" onclick="setLang('ko')">KO</a>
-  </div>
-</div>
+<p style="text-align: center;">
+  <a href="https://www.linkedin.com/in/sungju-kim-3b0406b0/">LinkedIn</a> ·
+  <a href="https://github.com/goddoe">GitHub</a> ·
+  <a href="mailto:goddoe2@gmail.com">Email</a>
+</p>
 
-<div class="lang-en" markdown="1">
+:::en
 
 Currently working on reinforcement learning for LLM agents, with a focus on enhancing their software engineering capabilities. Previously, I have conducted research and development in NLP, dialogue systems, information retrieval, embeddings, and question answering.
 
@@ -129,17 +76,17 @@ Team Qualc, 2016
 
 ## Patents
 
-- **Method, Apparatus and Computer Program for Providing Coding Environment Optimized for Each User**
-  *KR Patent Application No. 1020230177976*, Published as KR1020250088172A in 2025
+- **Method, Apparatus and Computer Program for Providing Coding Environment Optimized for Each User**<br/>
+  *KR Patent Application No. 1020230177976*, Published as KR1020250088172A in 2025<br/>
   [DOI Link](https://doi.org/10.8080/1020230177976)
 
-- **Method and System for Processing Unclear Intent Query in Conversation System**
-  *US Patent No. US11403345B2*, Granted in 2022
+- **Method and System for Processing Unclear Intent Query in Conversation System**<br/>
+  *US Patent No. US11403345B2*, Granted in 2022<br/>
   [Google Patents Link](https://patents.google.com/patent/US11403345B2)
 
-</div>
+:::
 
-<div class="lang-ko" markdown="1">
+:::ko
 
 현재 LLM 에이전트의 소프트웨어 엔지니어링 능력 향상에 초점을 맞춘 강화학습 연구를 진행하고 있습니다. 이전에는 NLP, 대화 시스템, 정보 검색, 임베딩, 질의응답 분야에서 연구 개발을 수행했습니다.
 
@@ -203,39 +150,16 @@ AI 연구팀, 서울, 대한민국
 
 ## 특허
 
-- **사용자별 최적화된 코딩 환경 제공 방법, 장치 및 컴퓨터 프로그램**
-  *KR 특허출원 No. 1020230177976*, 2025년 KR1020250088172A로 공개
+- **사용자별 최적화된 코딩 환경 제공 방법, 장치 및 컴퓨터 프로그램**<br/>
+  *KR 특허출원 No. 1020230177976*, 2025년 KR1020250088172A로 공개<br/>
   [DOI 링크](https://doi.org/10.8080/1020230177976)
 
-- **대화 시스템에서 불명확한 의도 쿼리 처리 방법 및 시스템**
-  *US 특허 No. US11403345B2*, 2022년 등록
+- **대화 시스템에서 불명확한 의도 쿼리 처리 방법 및 시스템**<br/>
+  *US 특허 No. US11403345B2*, 2022년 등록<br/>
   [Google Patents 링크](https://patents.google.com/patent/US11403345B2)
 
-</div>
+:::
 
 <div style="text-align: center; margin-top: 50px;">
-  <img src="{{site.url}}/assets/imgs/SAJA.png" width="60%" />
+  <img src="/images/about/SAJA.png" width="60%" alt="" />
 </div>
-
-<script>
-function setLang(lang) {
-  document.querySelector('.lang-en').classList.remove('active');
-  document.querySelector('.lang-ko').classList.remove('active');
-  document.getElementById('btn-en').classList.remove('active');
-  document.getElementById('btn-ko').classList.remove('active');
-
-  document.querySelector('.lang-' + lang).classList.add('active');
-  document.getElementById('btn-' + lang).classList.add('active');
-  localStorage.setItem('lang', lang);
-}
-
-(function() {
-  var saved = localStorage.getItem('lang');
-  if (saved) {
-    setLang(saved);
-  } else {
-    var browserLang = navigator.language || navigator.userLanguage;
-    setLang(browserLang.startsWith('ko') ? 'ko' : 'en');
-  }
-})();
-</script>

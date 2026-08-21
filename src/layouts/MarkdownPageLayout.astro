@@ -1,0 +1,19 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import LangToggle from '../components/LangToggle.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout title={frontmatter.title} description={frontmatter.description}>
+  <article>
+    <header class="post-header">
+      <h1>{frontmatter.heading || frontmatter.title}</h1>
+      {frontmatter.subtitle && <div class="post-meta">{frontmatter.subtitle}</div>}
+    </header>
+    {frontmatter.bilingual && <LangToggle />}
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

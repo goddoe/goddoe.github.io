@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Editor · Sungju Kim</title>
+<style>
+  :root {
+    --serif: "Times New Roman", Times, serif;
+    --mono: "SF Mono", Menlo, Consolas, monospace;
+    --text: #1a1a1a;
+    --muted: #757575;
+    --faint: #9e9e9e;
+    --rule: #e0e0e0;
+    --bg: #ffffff;
+    --panel: #fafafa;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--serif);
+    color: var(--text);
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    flex: none;
+  }
+  .topbar .brand { font-weight: 700; font-size: 1rem; text-decoration: none; color: var(--text); }
+  .topbar .brand span { color: var(--faint); font-weight: 400; font-style: italic; }
+  .topbar .status { font-size: 0.85rem; color: var(--faint); font-style: italic; min-width: 5rem; }
+  .topbar .spacer { flex: 1; }
+  .topbar button, .topbar a.btn {
+    font-family: var(--serif);
+    font-size: 0.85rem;
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.25rem 0.7rem;
+    cursor: pointer;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .topbar button:hover, .topbar a.btn:hover { border-color: var(--text); }
+  .topbar button.danger { color: #b3261e; }
+  .topbar button.danger.armed { background: #b3261e; border-color: #b3261e; color: #fff; }
+  .topbar button:disabled { opacity: 0.4; cursor: default; }
+
+  /* Layout */
+  .main { flex: 1; display: flex; min-height: 0; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 240px;
+    flex: none;
+    border-right: 1px solid var(--rule);
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .sidebar .new-area { padding: 0.75rem; border-bottom: 1px solid var(--rule); }
+  .sidebar .new-area input {
+    width: 100%;
+    font-family: var(--serif);
+    font-size: 0.9rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--bg);
+  }
+  .sidebar .new-area input:focus { outline: none; border-color: var(--text); }
+  .sidebar .hint { font-size: 0.72rem; color: var(--faint); margin-top: 0.35rem; font-style: italic; }
+  .post-items { overflow-y: auto; flex: 1; margin: 0; padding: 0; list-style: none; }
+  .post-items li {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    cursor: pointer;
+    line-height: 1.35;
+  }
+  .post-items li:hover { background: #f0f0f0; }
+  .post-items li.active { background: #ececec; }
+  .post-items .t { font-size: 0.92rem; }
+  .post-items .d { font-size: 0.72rem; color: var(--faint); }
+  .draft-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-family: var(--mono);
+    color: #b3261e;
+    border: 1px solid #b3261e;
+    border-radius: 3px;
+    padding: 0 0.3em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+  }
+
+  /* Editor + preview */
+  .workspace { flex: 1; display: flex; min-width: 0; }
+  .editor-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--rule); }
+  .toolbar {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--rule);
+    flex: none;
+    flex-wrap: wrap;
+  }
+  .toolbar button {
+    font-family: var(--serif);
+    font-size: 0.8rem;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 0.15rem 0.5rem;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .toolbar button:hover { border-color: var(--rule); color: var(--text); }
+  #editor {
+    flex: 1;
+    width: 100%;
+    border: none;
+    resize: none;
+    padding: 1.25rem 1.5rem;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+  }
+  #editor:focus { outline: none; }
+  #editor.dragover { background: #f5f5f0; }
+
+  .preview-pane { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .preview-pane iframe { flex: 1; border: none; width: 100%; }
+
+  .empty {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--faint);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <a class="brand" href="/" target="_blank">Sungju Kim <span>· editor</span></a>
+    <span class="status" id="status"></span>
+    <span class="spacer"></span>
+    <a class="btn" id="open-link" href="#" target="_blank" style="display:none">Open ↗</a>
+    <button id="save-btn" disabled>Save</button>
+    <button id="delete-btn" class="danger" disabled>Delete</button>
+  </div>
+
+  <div class="main">
+    <aside class="sidebar">
+      <div class="new-area">
+        <input id="new-title" placeholder="New post title — press Enter" />
+        <div class="hint">Images: drag &amp; drop or paste into the editor</div>
+      </div>
+      <ul class="post-items" id="post-list"></ul>
+    </aside>
+
+    <div class="workspace">
+      <div class="editor-pane">
+        <div class="toolbar">
+          <button data-md="bold" title="Bold"><b>B</b></button>
+          <button data-md="italic" title="Italic"><i>I</i></button>
+          <button data-md="code" title="Inline code">`code`</button>
+          <button data-md="codeblock" title="Code block">``` block</button>
+          <button data-md="link" title="Link">link</button>
+          <button data-md="image" title="Insert image from file">image…</button>
+          <button data-md="math" title="Math">$math$</button>
+          <button data-md="enko" title="EN/KO bilingual blocks">EN/KO</button>
+        </div>
+        <textarea id="editor" spellcheck="false" style="display:none"></textarea>
+        <div class="empty" id="empty-msg">Select a post, or create a new one.</div>
+        <input type="file" id="file-input" accept="image/*" multiple style="display:none" />
+      </div>
+      <div class="preview-pane">
+        <iframe id="preview" title="preview"></iframe>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function () {
+  var current = null;        // current post id
+  var dirty = false;
+  var saveTimer = null;
+  var reloadTimer = null;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var editor = $('editor');
+  var statusEl = $('status');
+
+  function setStatus(msg) { statusEl.textContent = msg || ''; }
+
+  function api(method, url, body) {
+    return fetch(url, {
+      method: method,
+      headers: body ? { 'Content-Type': 'application/json' } : undefined,
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function (r) {
+      return r.json().then(function (j) {
+        if (!r.ok) throw new Error(j.error || r.status);
+        return j;
+      });
+    });
+  }
+
+  /* ---------- post list ---------- */
+  function refreshList() {
+    return api('GET', '/admin/api/posts').then(function (posts) {
+      var ul = $('post-list');
+      ul.innerHTML = '';
+      posts.forEach(function (p) {
+        var li = document.createElement('li');
+        li.className = p.id === current ? 'active' : '';
+        var t = document.createElement('div');
+        t.className = 't';
+        t.textContent = p.title;
+        if (p.draft) {
+          var b = document.createElement('span');
+          b.className = 'draft-badge';
+          b.textContent = 'draft';
+          t.appendChild(b);
+        }
+        var d = document.createElement('div');
+        d.className = 'd';
+        d.textContent = (p.date || '').slice(0, 10);
+        li.appendChild(t);
+        li.appendChild(d);
+        li.onclick = function () { openPost(p.id); };
+        ul.appendChild(li);
+      });
+    });
+  }
+
+  /* ---------- open / save / delete ---------- */
+  function openPost(id) {
+    flushSave().then(function () {
+      return api('GET', '/admin/api/posts/' + encodeURIComponent(id));
+    }).then(function (p) {
+      current = p.id;
+      editor.value = p.content;
+      editor.style.display = '';
+      $('empty-msg').style.display = 'none';
+      dirty = false;
+      $('save-btn').disabled = true;
+      $('delete-btn').disabled = false;
+      disarmDelete();
+      var link = '/blog/' + p.id + '/';
+      $('open-link').href = link;
+      $('open-link').style.display = '';
+      $('preview').src = link;
+      setStatus('');
+      refreshList();
+    }).catch(function (e) { setStatus('error: ' + e.message); });
+  }
+
+  function save() {
+    if (!current || !dirty) return Promise.resolve();
+    var content = editor.value;
+    setStatus('saving…');
+    return api('PUT', '/admin/api/posts/' + encodeURIComponent(current), { content: content })
+      .then(function () {
+        dirty = false;
+        $('save-btn').disabled = true;
+        setStatus('saved');
+        scheduleReload();
+        refreshList();
+      })
+      .catch(function (e) { setStatus('error: ' + e.message); });
+  }
+
+  function flushSave() {
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+    return save();
+  }
+
+  function scheduleSave() {
+    dirty = true;
+    $('save-btn').disabled = false;
+    setStatus('editing…');
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 800);
+  }
+
+  function scheduleReload() {
+    if (reloadTimer) clearTimeout(reloadTimer);
+    reloadTimer = setTimeout(function () {
+      var iframe = $('preview');
+      try { iframe.contentWindow.location.reload(); }
+      catch (e) { iframe.src = iframe.src; }
+    }, 500);
+  }
+
+  /* delete: two-step arm/confirm, no browser dialog */
+  var deleteArmed = false;
+  function disarmDelete() {
+    deleteArmed = false;
+    $('delete-btn').classList.remove('armed');
+    $('delete-btn').textContent = 'Delete';
+  }
+  $('delete-btn').onclick = function () {
+    if (!current) return;
+    if (!deleteArmed) {
+      deleteArmed = true;
+      this.classList.add('armed');
+      this.textContent = 'Really delete?';
+      setTimeout(disarmDelete, 3000);
+      return;
+    }
+    api('DELETE', '/admin/api/posts/' + encodeURIComponent(current)).then(function () {
+      current = null;
+      editor.style.display = 'none';
+      $('empty-msg').style.display = '';
+      $('delete-btn').disabled = true;
+      $('open-link').style.display = 'none';
+      $('preview').src = 'about:blank';
+      disarmDelete();
+      refreshList();
+      setStatus('deleted');
+    });
+  };
+
+  $('save-btn').onclick = flushSave;
+
+  /* ---------- new post ---------- */
+  $('new-title').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    var title = this.value.trim();
+    if (!title) return;
+    var input = this;
+    api('POST', '/admin/api/posts', { title: title }).then(function (p) {
+      input.value = '';
+      refreshList().then(function () { openPost(p.id); });
+    }).catch(function (e2) { setStatus('error: ' + e2.message); });
+  });
+
+  /* ---------- editing ---------- */
+  editor.addEventListener('input', scheduleSave);
+
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      e.preventDefault();
+      flushSave();
+    }
+  });
+
+  /* ---------- toolbar ---------- */
+  function insertAtCursor(before, after, placeholder) {
+    if (!current) return;
+    var start = editor.selectionStart, end = editor.selectionEnd;
+    var sel = editor.value.slice(start, end) || placeholder || '';
+    var text = before + sel + (after || '');
+    editor.setRangeText(text, start, end, 'end');
+    if (!editor.value.slice(start, end)) {
+      editor.selectionStart = start + before.length;
+      editor.selectionEnd = start + before.length + sel.length;
+    }
+    editor.focus();
+    scheduleSave();
+  }
+
+  var snippets = {
+    bold: function () { insertAtCursor('**', '**', 'bold'); },
+    italic: function () { insertAtCursor('*', '*', 'italic'); },
+    code: function () { insertAtCursor('`', '`', 'code'); },
+    codeblock: function () { insertAtCursor('\n```python\n', '\n```\n', 'code'); },
+    link: function () { insertAtCursor('[', '](https://)', 'text'); },
+    math: function () { insertAtCursor('$', '$', 'x^2'); },
+    enko: function () {
+      insertAtCursor('\n:::en\n\nEnglish text.\n\n:::\n\n:::ko\n\n한국어 텍스트.\n\n:::\n', '', '');
+    },
+    image: function () { $('file-input').click(); }
+  };
+  document.querySelectorAll('.toolbar button').forEach(function (btn) {
+    btn.onclick = function () { snippets[btn.dataset.md](); };
+  });
+
+  /* ---------- image upload ---------- */
+  function uploadFile(file) {
+    if (!current) { setStatus('open a post first'); return Promise.resolve(); }
+    if (!/^image\//.test(file.type)) return Promise.resolve();
+    setStatus('uploading ' + file.name + '…');
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var b64 = reader.result.split(',')[1];
+        api('POST', '/admin/api/upload', {
+          id: current,
+          filename: file.name || 'pasted.png',
+          data: b64
+        }).then(function (r) {
+          insertAtCursor('\n![](' + r.path + ')\n', '', '');
+          setStatus('image added');
+          resolve();
+        }).catch(function (e) { setStatus('error: ' + e.message); reject(e); });
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  $('file-input').addEventListener('change', function () {
+    Array.prototype.slice.call(this.files).reduce(function (p, f) {
+      return p.then(function () { return uploadFile(f); });
+    }, Promise.resolve());
+    this.value = '';
+  });
+
+  editor.addEventListener('paste', function (e) {
+    var items = (e.clipboardData || {}).items || [];
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].kind === 'file' && /^image\//.test(items[i].type)) {
+        e.preventDefault();
+        uploadFile(items[i].getAsFile());
+        return;
+      }
+    }
+  });
+
+  editor.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    editor.classList.add('dragover');
+  });
+  editor.addEventListener('dragleave', function () {
+    editor.classList.remove('dragover');
+  });
+  editor.addEventListener('drop', function (e) {
+    e.preventDefault();
+    editor.classList.remove('dragover');
+    var files = Array.prototype.slice.call(e.dataTransfer.files || []);
+    files.reduce(function (p, f) {
+      return p.then(function () { return uploadFile(f); });
+    }, Promise.resolve());
+  });
+
+  /* ---------- init ---------- */
+  refreshList();
+})();
+</script>
+</body>
+</html>

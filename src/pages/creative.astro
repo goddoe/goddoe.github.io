@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    title: 'What Lies Beyond',
+    href: '/creative/what-lies-beyond/',
+    description:
+      'A short narrative game about AI, truth, and what lies beyond the screen. Canvas-based, playable in the browser.',
+    tags: ['Game', 'JavaScript', 'Canvas', 'Narrative'],
+  },
+  {
+    title: 'What Lies Beyond 2',
+    href: '/creative/what-lies-beyond-2/',
+    description:
+      'A short narrative game — the sequel to What Lies Beyond. Canvas-based, playable in the browser.',
+    tags: ['Game', 'JavaScript', 'Canvas', 'Narrative'],
+  },
+];
+---
+
+<BaseLayout title="Creative" description="Creative projects and experiments.">
+  <article>
+    <header class="post-header">
+      <h1>Creative</h1>
+      <div class="post-meta">Creative projects and experiments.</div>
+    </header>
+
+    <ul class="project-list">
+      {
+        projects.map((p) => (
+          <li>
+            <a class="project-title" href={p.href}>
+              {p.title}
+            </a>
+            <p class="project-desc">{p.description}</p>
+            <div class="project-tags">{p.tags.join(' · ')}</div>
+          </li>
+        ))
+      }
+    </ul>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .project-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-rule);
+  }
+  .project-list li:first-child {
+    border-top: 1px solid var(--color-rule);
+  }
+  .project-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .project-title:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .project-desc {
+    margin: 0.4rem 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+  }
+  .project-tags {
+    font-size: 0.82rem;
+    color: var(--color-faint);
+    font-style: italic;
+  }
+</style>

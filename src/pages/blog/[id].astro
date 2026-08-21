@@ -1,0 +1,57 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LangToggle from '../../components/LangToggle.astro';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+  const posts = await getCollection(
+    'blog',
+    ({ data }) => import.meta.env.DEV || !data.draft
+  );
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const bilingual = /^:::(en|ko)\s*$/m.test(post.body ?? '');
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article>
+    <header class="post-header">
+      <h1>
+        {post.data.title}
+        {post.data.draft && <span class="draft-badge">draft</span>}
+      </h1>
+      <div class="post-meta">
+        {fmt(post.data.date)}
+        {
+          post.data.tags.length > 0 && (
+            <>
+              {' · '}
+              <span class="tags">{post.data.tags.join(', ')}</span>
+            </>
+          )
+        }
+      </div>
+    </header>
+
+    {bilingual && <LangToggle />}
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

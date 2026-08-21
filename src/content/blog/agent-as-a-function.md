@@ -1,37 +1,11 @@
 ---
-layout: post
-title:  "Agent As a Function"
-date:   2025-01-13 19:00:00 +0900
-categories: [Research, Engineering, LLM, Agent]
+title: "Agent As a Function"
+date: 2025-01-13
+description: "Traditional functions execute a predefined algorithm; Autonomous Functions discover the algorithm during execution."
+tags: [Research, Engineering, LLM, Agent]
 ---
 
-<style>
-.lang-switch {
-  font-size: 0.85em;
-  color: #999;
-  margin-bottom: 20px;
-}
-.lang-switch a {
-  color: #999;
-  text-decoration: none;
-  cursor: pointer;
-}
-.lang-switch a:hover {
-  color: #666;
-}
-.lang-switch a.active {
-  color: #333;
-  font-weight: 600;
-}
-.lang-en, .lang-ko { display: none; }
-.lang-en.active, .lang-ko.active { display: block; }
-</style>
-
-<div class="lang-switch">
-  <a id="btn-en" onclick="setLang('en')">EN</a> | <a id="btn-ko" onclick="setLang('ko')">KO</a>
-</div>
-
-<div class="lang-en" markdown="1">
+:::en
 
 Agents can work like functions too.
 
@@ -165,9 +139,9 @@ This is a fundamental shift in how we think about computation. Instead of writin
 
 *A note on terminology: strictly speaking, every input-output mapping is a function. The "function" I mean here is the everyday one we write in code: a procedure whose steps are fixed when we write it.*
 
-</div>
+:::
 
-<div class="lang-ko" markdown="1">
+:::ko
 
 Agent도 하나의 함수처럼 동작할 수 있다.
 
@@ -297,31 +271,4 @@ def build_training_dataset(sources: list[str]) -> Dataset:
 
 이건 연산에 대한 사고방식의 근본적인 변화다. 모든 단계를 명시하는 코드를 작성하는 대신, 목표를 정의하고 지적 Agent가 trajectory를 알아내게 한다. 함수가 고정된 연산 순서가 아니라 지적 문제 해결을 담는 컨테이너가 된다.
 
----
-
-*용어에 대한 노트: 엄밀히 말하면 모든 입출력 매핑은 함수다. 여기서 말하는 "함수"는 우리가 일상적으로 코드에 작성하는 함수, 즉 단계가 작성 시점에 고정되는 절차를 뜻한다.*
-
-</div>
-
-<script>
-function setLang(lang) {
-  document.querySelector('.lang-en').classList.remove('active');
-  document.querySelector('.lang-ko').classList.remove('active');
-  document.getElementById('btn-en').classList.remove('active');
-  document.getElementById('btn-ko').classList.remove('active');
-
-  document.querySelector('.lang-' + lang).classList.add('active');
-  document.getElementById('btn-' + lang).classList.add('active');
-  localStorage.setItem('lang', lang);
-}
-
-(function() {
-  var saved = localStorage.getItem('lang');
-  if (saved) {
-    setLang(saved);
-  } else {
-    var browserLang = navigator.language || navigator.userLanguage;
-    setLang(browserLang.startsWith('ko') ? 'ko' : 'en');
-  }
-})();
-</script>
+:::
