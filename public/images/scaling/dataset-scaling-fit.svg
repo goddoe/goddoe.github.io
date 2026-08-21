@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" font-family="Times New Roman, Times, serif">
+  <!-- background: the blog is light-only -->
+  <rect width="640" height="400" fill="#ffffff"/>
+
+  <!-- axes -->
+  <line x1="64" y1="24" x2="64" y2="344" stroke="#1a1a1a" stroke-width="1"/>
+  <line x1="64" y1="344" x2="616" y2="344" stroke="#1a1a1a" stroke-width="1"/>
+
+  <!-- x ticks: 10^3 .. 10^7 -->
+  <g stroke="#1a1a1a" stroke-width="1">
+    <line x1="101.6" y1="344" x2="101.6" y2="349"/>
+    <line x1="227.1" y1="344" x2="227.1" y2="349"/>
+    <line x1="352.5" y1="344" x2="352.5" y2="349"/>
+    <line x1="478.0" y1="344" x2="478.0" y2="349"/>
+    <line x1="603.4" y1="344" x2="603.4" y2="349"/>
+  </g>
+  <g fill="#1a1a1a" font-size="13" text-anchor="middle">
+    <text x="101.6" y="364">10<tspan dy="-5" font-size="9.5">3</tspan></text>
+    <text x="227.1" y="364">10<tspan dy="-5" font-size="9.5">4</tspan></text>
+    <text x="352.5" y="364">10<tspan dy="-5" font-size="9.5">5</tspan></text>
+    <text x="478.0" y="364">10<tspan dy="-5" font-size="9.5">6</tspan></text>
+    <text x="603.4" y="364">10<tspan dy="-5" font-size="9.5">7</tspan></text>
+  </g>
+
+  <!-- y ticks -->
+  <g stroke="#1a1a1a" stroke-width="1">
+    <line x1="59" y1="344" x2="64" y2="344"/>
+    <line x1="59" y1="252.6" x2="64" y2="252.6"/>
+    <line x1="59" y1="161.1" x2="64" y2="161.1"/>
+    <line x1="59" y1="69.7" x2="64" y2="69.7"/>
+  </g>
+  <g fill="#1a1a1a" font-size="13" text-anchor="end">
+    <text x="54" y="348">0.5</text>
+    <text x="54" y="256.6">0.6</text>
+    <text x="54" y="165.1">0.7</text>
+    <text x="54" y="73.7">0.8</text>
+  </g>
+
+  <!-- axis titles -->
+  <text x="340" y="392" fill="#1a1a1a" font-size="14" font-style="italic" text-anchor="middle">Dataset size (log scale)</text>
+  <text x="20" y="184" fill="#1a1a1a" font-size="14" font-style="italic" text-anchor="middle" transform="rotate(-90 20 184)">Score</text>
+
+  <!-- linear fit -->
+  <line x1="82.8" y1="287.5" x2="609.7" y2="103.1" stroke="#757575" stroke-width="1.75" stroke-dasharray="7 5"/>
+
+  <!-- fit annotation -->
+  <text x="120" y="150" fill="#757575" font-size="14" font-style="italic">f(dataset size) = score</text>
+
+  <!-- data points -->
+  <g fill="#1a1a1a">
+    <circle cx="101.6" cy="273.6" r="4"/>
+    <circle cx="139.3" cy="274.5" r="4"/>
+    <circle cx="189.4" cy="245.2" r="4"/>
+    <circle cx="227.1" cy="248.9" r="4"/>
+    <circle cx="264.7" cy="220.6" r="4"/>
+    <circle cx="314.9" cy="197.7" r="4"/>
+    <circle cx="352.5" cy="203.2" r="4"/>
+    <circle cx="390.2" cy="183.1" r="4"/>
+    <circle cx="440.3" cy="155.7" r="4"/>
+    <circle cx="478.0" cy="160.3" r="4"/>
+    <circle cx="515.6" cy="133.7" r="4"/>
+    <circle cx="565.8" cy="122.7" r="4"/>
+  </g>
+</svg>

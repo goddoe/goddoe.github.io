@@ -33,6 +33,11 @@ And in many cases, by conducting scaling experiments on the dataset and measurin
 
 Generally, performance increases on a log scale as the number of data samples increases, so if you plot log(dataset size) vs score, you will see a linear relationship and can find a function "f(dataset size) = score" through linear fitting that predicts performance based on the number of data samples.
 
+<figure>
+  <img src="/images/scaling/dataset-scaling-fit.svg" alt="Scatter plot of score against dataset size on a log scale, rising roughly linearly, with a dashed linear fit labeled f(dataset size) = score" />
+  <figcaption>A dataset scaling experiment: score against dataset size on a log scale, with a linear fit.</figcaption>
+</figure>
+
 By using this function, we can predict how much performance gain we can expect when scaling this methodology and decide whether to continue scaling the current data collection methodology, switch to collecting different data, or move on to another aspect besides data.
 
 And this is actually the most basic concept taught in ML 101. This is fundamental in LLM experiments as well, and not only I, but frontier labs also emphasize and invest in scaling research with many experiments.
@@ -68,6 +73,11 @@ AI/ML 문제에서 모델 크기 외에 스케일링할 수 있는 또 다른 �
 그리고 많은 경우, 데이터셋에 대한 스케일링 실험을 수행하고 데이터 샘플 수에 따른 성능을 측정함으로써 데이터 샘플 수에 기반한 성능 예측 모델을 만들 수 있다.
 
 일반적으로 데이터 샘플 수가 증가함에 따라 성능은 로그 스케일로 증가하므로, log(데이터셋 크기) vs 점수를 그래프로 그리면 선형 관계를 볼 수 있고, 선형 피팅을 통해 데이터 샘플 수에 기반한 성능을 예측하는 함수 "f(데이터셋 크기) = 점수"를 찾을 수 있다.
+
+<figure>
+  <img src="/images/scaling/dataset-scaling-fit.svg" alt="로그 스케일의 데이터셋 크기에 따라 점수가 대체로 선형으로 상승하는 산점도와 f(dataset size) = score로 표기된 점선 선형 피팅" />
+  <figcaption>데이터셋 스케일링 실험: 로그 스케일의 데이터셋 크기에 따른 점수와 선형 피팅.</figcaption>
+</figure>
 
 이 함수를 사용하여 이 방법론을 스케일링할 때 얼마나 많은 성능 향상을 기대할 수 있는지 예측하고, 현재 데이터 수집 방법론을 계속 스케일링할지, 다른 데이터를 수집하는 것으로 전환할지, 또는 데이터 외의 다른 측면으로 넘어갈지 결정할 수 있다.
 
