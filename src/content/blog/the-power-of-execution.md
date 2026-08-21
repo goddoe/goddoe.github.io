@@ -3,6 +3,7 @@ title: "The Power of Execution"
 date: 2025-02-02
 description: "In a world where anyone can do anything, execution is what sets you apart."
 tags: [thought]
+draft: true
 ---
 
 Everyone can do anything, whether it is hard or not.
