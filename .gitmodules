@@ -4,3 +4,6 @@
 [submodule "creative/what-lies-beyond-2"]
 	path = public/creative/what-lies-beyond-2
 	url = https://github.com/goddoe/what-lies-beyond-2.git
+[submodule "public/creative/what-lies-beyond-3"]
+	path = public/creative/what-lies-beyond-3
+	url = https://github.com/goddoe/what-lies-beyond-3.git
