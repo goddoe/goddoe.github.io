@@ -9,7 +9,7 @@ bilingual: true
 <p style="text-align: center;">
   <a href="https://www.linkedin.com/in/sungju-kim-3b0406b0/">LinkedIn</a> ·
   <a href="https://github.com/goddoe">GitHub</a> ·
-  <a href="mailto:goddoe2@gmail.com">Email</a>
+  <a href="#contact" data-user="goddoe2" data-domain="gmail.com">Email</a>
 </p>
 
 :::en
@@ -163,3 +163,13 @@ AI 연구팀, 서울, 대한민국
 <div style="text-align: center; margin-top: 50px;">
   <img src="/images/about/SAJA.png" width="60%" alt="" />
 </div>
+
+<script>
+  // Assemble the mailto address at runtime so the full email never
+  // appears in the served HTML (spam-harvester mitigation).
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a[data-user][data-domain]').forEach(function (a) {
+      a.href = 'mailto:' + a.dataset.user + '@' + a.dataset.domain;
+    });
+  });
+</script>
