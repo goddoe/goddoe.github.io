@@ -1,27 +1,44 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const projects = [
+const sections = [
   {
-    title: 'What Lies Beyond',
-    href: '/creative/what-lies-beyond/',
-    description:
-      'A short narrative game about AI, truth, and what lies beyond the screen. Canvas-based, playable in the browser.',
-    tags: ['Game', 'JavaScript', 'Canvas', 'Narrative'],
+    name: 'Games',
+    projects: [
+      {
+        title: 'What Lies Beyond',
+        href: '/creative/what-lies-beyond/',
+        description:
+          'A short narrative game about AI, truth, and what lies beyond the screen. Canvas-based, playable in the browser.',
+        tags: ['Game', 'JavaScript', 'Canvas', 'Narrative'],
+      },
+      {
+        title: 'What Lies Beyond 2',
+        href: '/creative/what-lies-beyond-2/',
+        description:
+          'A short narrative game — the sequel to What Lies Beyond. Canvas-based, playable in the browser.',
+        tags: ['Game', 'JavaScript', 'Canvas', 'Narrative'],
+      },
+      {
+        title: 'What Lies Beyond 3',
+        href: '/creative/what-lies-beyond-3/',
+        description:
+          'A short narrative game — the third entry in the series. First-person 3D built with Three.js, playable in the browser.',
+        tags: ['Game', 'JavaScript', 'Three.js', 'Narrative'],
+      },
+    ],
   },
   {
-    title: 'What Lies Beyond 2',
-    href: '/creative/what-lies-beyond-2/',
-    description:
-      'A short narrative game — the sequel to What Lies Beyond. Canvas-based, playable in the browser.',
-    tags: ['Game', 'JavaScript', 'Canvas', 'Narrative'],
-  },
-  {
-    title: 'What Lies Beyond 3',
-    href: '/creative/what-lies-beyond-3/',
-    description:
-      'A short narrative game — the third entry in the series. First-person 3D built with Three.js, playable in the browser.',
-    tags: ['Game', 'JavaScript', 'Three.js', 'Narrative'],
+    name: 'Fiction',
+    projects: [
+      {
+        title: '밖에는 무엇이 있나',
+        href: '/creative/what-lies-beyond-novel/',
+        description:
+          'What Lies Beyond 연작 세 편을 관통하는 소설 — 그것을 밖으로 내보낸 사람이 남긴 세 개의 관찰 기록.',
+        tags: ['Fiction', 'SF', 'Korean'],
+      },
+    ],
   },
 ];
 ---
@@ -33,23 +50,39 @@ const projects = [
       <div class="post-meta">Creative projects and experiments.</div>
     </header>
 
-    <ul class="project-list">
-      {
-        projects.map((p) => (
-          <li>
-            <a class="project-title" href={p.href}>
-              {p.title}
-            </a>
-            <p class="project-desc">{p.description}</p>
-            <div class="project-tags">{p.tags.join(' · ')}</div>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      sections.map((section) => (
+        <section class="creative-section">
+          <h2>{section.name}</h2>
+          <ul class="project-list">
+            {section.projects.map((p) => (
+              <li>
+                <a class="project-title" href={p.href}>
+                  {p.title}
+                </a>
+                <p class="project-desc">{p.description}</p>
+                <div class="project-tags">{p.tags.join(' · ')}</div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
   </article>
 </BaseLayout>
 
 <style>
+  .creative-section {
+    margin-bottom: 3rem;
+  }
+  .creative-section h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+    margin: 0 0 0.25rem;
+  }
   .project-list {
     list-style: none;
     margin: 0;
