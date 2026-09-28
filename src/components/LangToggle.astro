@@ -1,31 +1,14 @@
-<div class="lang-switch">
-  <button id="btn-en" data-lang="en">EN</button>
-  {' | '}
-  <button id="btn-ko" data-lang="ko">KO</button>
-</div>
+<span class="lang-switch">
+  <button data-lang="en">EN</button><span class="sep">|</span><button data-lang="ko">KO</button>
+</span>
 
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
-    function setLang(lang) {
-      document.querySelectorAll('.lang-block').forEach(function (el) {
-        el.classList.toggle('active', el.classList.contains('lang-' + lang));
-      });
-      document.querySelectorAll('.lang-switch button').forEach(function (btn) {
-        btn.classList.toggle('active', btn.dataset.lang === lang);
-      });
-      localStorage.setItem('lang', lang);
-    }
-    document.querySelectorAll('.lang-switch button').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        setLang(btn.dataset.lang);
-      });
+  document.querySelectorAll('.lang-switch button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var lang = btn.dataset.lang;
+      document.documentElement.dataset.lang = lang;
+      document.documentElement.lang = lang;
+      try { localStorage.setItem('lang', lang); } catch (e) {}
     });
-    var saved = localStorage.getItem('lang');
-    if (saved === 'en' || saved === 'ko') {
-      setLang(saved);
-    } else {
-      var browserLang = navigator.language || '';
-      setLang(browserLang.indexOf('ko') === 0 ? 'ko' : 'en');
-    }
   });
 </script>

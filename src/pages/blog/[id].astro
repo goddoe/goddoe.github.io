@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LangToggle from '../../components/LangToggle.astro';
 import 'katex/dist/katex.min.css';
 
 export async function getStaticPaths() {
@@ -17,8 +16,6 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-
-const bilingual = /^:::(en|ko)\s*$/m.test(post.body ?? '');
 
 const fmt = (d: Date) =>
   d.toLocaleDateString('en-US', {
@@ -47,8 +44,6 @@ const fmt = (d: Date) =>
         }
       </div>
     </header>
-
-    {bilingual && <LangToggle />}
 
     <div class="prose">
       <Content />

@@ -3,7 +3,6 @@ layout: ../layouts/MarkdownPageLayout.astro
 title: "About"
 heading: "Sungju Kim"
 subtitle: "AI Research Engineer"
-bilingual: true
 ---
 
 <p style="text-align: center;">
