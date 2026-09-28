@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import LangToggle from '../components/LangToggle.astro';
 
 interface Props {
   title?: string;
@@ -15,7 +16,7 @@ const pageTitle = title ? `${title} · ${siteTitle}` : siteTitle;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,6 +29,15 @@ const pageTitle = title ? `${title} · ${siteTitle}` : siteTitle;
       href={new URL('rss.xml', Astro.site)}
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // English is the default; only an explicit KO choice is remembered.
+      try {
+        if (localStorage.getItem('lang') === 'ko') {
+          document.documentElement.dataset.lang = 'ko';
+          document.documentElement.lang = 'ko';
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -37,6 +47,7 @@ const pageTitle = title ? `${title} · ${siteTitle}` : siteTitle;
           <a href="/">Blog</a>
           <a href="/creative/">Creative</a>
           <a href="/about/">About</a>
+          <LangToggle />
         </nav>
       </div>
     </header>

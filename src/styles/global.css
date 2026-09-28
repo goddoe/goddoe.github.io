@@ -298,13 +298,15 @@ body {
   padding: 0.25rem 0;
 }
 
-/* --- Language toggle ------------------------------------------- */
+/* --- Language switch (site-wide, in the nav) ------------------- */
 
 .lang-switch {
-  font-size: 0.85rem;
+  margin-left: 1.25rem;
   color: var(--color-faint);
-  margin-bottom: 1.75rem;
-  text-align: center;
+}
+
+.lang-switch .sep {
+  margin: 0 0.3em;
 }
 
 .lang-switch button {
@@ -318,20 +320,19 @@ body {
 }
 
 .lang-switch button:hover {
-  color: var(--color-muted);
+  color: var(--color-text);
 }
 
-.lang-switch button.active {
+html[data-lang="en"] .lang-switch button[data-lang="en"],
+html[data-lang="ko"] .lang-switch button[data-lang="ko"] {
   color: var(--color-text);
   font-weight: 700;
 }
 
-.lang-block {
+/* Bilingual blocks: English shows unless KO is selected. */
+html[data-lang="ko"] .lang-en,
+html:not([data-lang="ko"]) .lang-ko {
   display: none;
-}
-
-.lang-block.active {
-  display: block;
 }
 
 /* --- Small screens --------------------------------------------- */
